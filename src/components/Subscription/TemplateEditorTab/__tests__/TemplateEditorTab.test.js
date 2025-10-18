@@ -7,11 +7,14 @@ import {
   setAdvancedPermission,
 } from "../../../../hooks/useTemplateEditor.js";
 import { getOperations, resetOperations } from "../../../../state/templateOperations.js";
+import { setLinkExpiryForTest, resetLinkExpiryOverrides } from "../../../../services/subscriptionAPI.js";
 
 export function runTemplateEditorTabTests() {
   resetTemplateEditor();
   setAdvancedPermission(true);
   resetOperations();
+  resetLinkExpiryOverrides();
+  setLinkExpiryForTest("providerA", 45);
 
   const view = createTemplateEditorTab();
   assert.ok(view.sections.includes("providers"));
@@ -37,5 +40,9 @@ export function runTemplateEditorTabTests() {
       assert.match(exported, /^[A-Za-z0-9+/=]+$/);
       await fullView.importData("pass123", exported);
       assert.ok(getOperations().includes("import:pass123"));
+      const countdown = fullView.snapshots.find((item) => item.region === "Japan");
+      if (countdown) {
+        assert.strictEqual(countdown.highlight, "danger");
+      }
     });
 }

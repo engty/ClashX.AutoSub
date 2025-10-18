@@ -1,6 +1,8 @@
 import assert from "node:assert";
-import { replaceLinks, resetTemplateEditor } from "../../src/hooks/useTemplateEditor.js";
+import { replaceLinks, resetTemplateEditor, recordFusionMetrics } from "../../src/hooks/useTemplateEditor.js";
 import { getOperations } from "../../src/state/templateOperations.js";
+import { setLinkExpiryForTest, resetLinkExpiryOverrides } from "../../src/services/subscriptionAPI.js";
+import { createSnapshotBanner } from "../../src/components/Subscription/TemplateEditorTab/SnapshotBanner.js";
 
 export async function runUiTests() {
   resetTemplateEditor();
@@ -13,13 +15,17 @@ export async function runUiTests() {
   ]);
 }
 
-import { getFusionHistory } from '../../src/hooks/useTemplateEditor.js';
-
 export async function runCountdownTests() {
-  const history = getFusionHistory();
-  if (history.length === 0) {
-    console.log('暂无融合记录，倒计时测试跳过');
-    return;
+  resetTemplateEditor();
+  resetLinkExpiryOverrides();
+  await recordFusionMetrics("Japan", [
+    { node: "Tokyo", latency: 80, providerId: "providerA", provider_id: "providerA" },
+  ]);
+  setLinkExpiryForTest("providerA", 50);
+  const snapshots = createSnapshotBanner();
+  const countdown = snapshots.find((item) => item.region === "Japan");
+  if (!countdown) {
+    throw new Error("未生成倒计时信息");
   }
-  console.log('倒计时测试完成');
+  assert.strictEqual(countdown.highlight, "danger");
 }
