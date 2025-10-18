@@ -1312,3 +1312,386 @@
 [2m2025-10-18T03:44:42.429706Z[0m [32m INFO[0m ToolCall: serena__search_for_pattern {"relative_path":"src","substring_pattern":"@tauri-apps","max_answer_chars":8000}
 [2m2025-10-18T03:44:58.872889Z[0m [32m INFO[0m ToolCall: serena__write_memory {"memory_name":"project_structure_snapshot","content":"# 项目结构概览\n- 桌面应用采用 Tauri 2.0 架构：前端使用 React 18 + TypeScript + Vite + Tailwind，后端为 Rust，配套插件包括通知、更新、进程、打开器与日志。\n- 前端目录 `src/`：`components` 覆盖订阅管理、模板、更新、设置、UI 组件等子模块；`hooks` 内聚应用状态、订阅、主题、通知、窗口与托盘逻辑；`services` 封装调用 `@tauri-apps/api` 的存储、配置、订阅与事件接口；`utils`/`types` 提供主题与校验工具及类型定义；`App.tsx` 监听 Tauri 事件并统筹布局。\n- Rust 侧 `src-tauri/`：`commands` 定义前端可调用的配置、订阅、更新、托盘、模板、通知、自动启动、备份等命令；`services` 负责日志、通知、备份、更新、自动启动、配置、网络、模板、加密等核心能力；`models` 描述配置、订阅、模板与凭证结构；`main.rs` 构建 Tauri 应用、初始化服务并注册命令；配套 `tests` 目录含合同、集成与工作流测试。\n- 测试体系：根目录下 `tests/` 使用 Vitest 进行组件、Hook 单元测试并提供 UI、合同、集成测试脚手架；`src-tauri/tests/` 包含针对 Rust 服务的合同、集成与工作流测试；存在 `tests/utils/testUtils.tsx` 提供测试工具。\n- 文档与规格：`specs/` 整理需求、计划与设计，`docs/macOS-HIG-Implementation.md` 记录界面规范；`assets/` 提供图标与模板资源。\n- 现有内建能力涵盖订阅批量管理、模板管理、系统集成、备份恢复、通知系统、自动更新、托盘与自动启动等，为新增功能可复用的扩展点。"}
 [2m2025-10-18T03:45:05.908036Z[0m [32m INFO[0m ToolCall: update_plan {"plan":[{"step":"确认Serena项目激活状态并检查是否已完成onboarding","status":"completed"},{"step":"使用目录列表工具了解项目顶层结构","status":"completed"},{"step":"对主要源码目录获取符号概览并整理关键信息","status":"completed"},{"step":"总结项目结构并写入长期记忆","status":"completed"}]}
+[2m2025-10-18T03:48:40.352871Z[0m [32m INFO[0m ERR: No such file or directory (os error 2)
+[2m2025-10-18T03:48:54.500814Z[0m [32m INFO[0m ToolCall: sequential-thinking__sequentialthinking {"thought":"任务要求基于已有长期记忆 project_structure_snapshot 更新项目宪章 constitution。需读取模板、替换占位符、确保原则与治理内容完善，并更新相关模板保持一致。","thoughtNumber":1,"totalThoughts":6,"nextThoughtNeeded":true}
+[2m2025-10-18T03:48:58.845062Z[0m [32m INFO[0m ToolCall: sequential-thinking__sequentialthinking {"thought":"首先阅读 constitution 模板，识别所有占位符，并了解现有结构和版本信息。需要使用 Serena 工具获取文件内容。","thoughtNumber":2,"totalThoughts":6,"nextThoughtNeeded":true}
+[2m2025-10-18T03:49:04.090707Z[0m [32m INFO[0m ToolCall: sequential-thinking__sequentialthinking {"thought":"然后根据项目结构记忆和仓库文档，推导项目名称、原则等填充内容。需决定版本号增量和日期帮助。","thoughtNumber":3,"totalThoughts":6,"nextThoughtNeeded":true}
+[2m2025-10-18T03:49:08.143202Z[0m [32m INFO[0m ToolCall: sequential-thinking__sequentialthinking {"thought":"需要检查相关模板文件确保一致性，使用 Serena 工具读取 plan/spec/tasks/commands 等模板，如有必要更新。需评估是否含占位符或需调整文本。","thoughtNumber":4,"totalThoughts":6,"nextThoughtNeeded":true}
+[2m2025-10-18T03:49:16.656379Z[0m [32m INFO[0m ToolCall: sequential-thinking__sequentialthinking {"thought":"风险：模板可能包含大量占位符或结构复杂；需确保中文描述符合约束；确保版本升级有理据；日期需使用今日。若缺 ratification date 或其他信息需标注 TODO 并在同步报告说明。","thoughtNumber":5,"totalThoughts":6,"nextThoughtNeeded":true}
+[2m2025-10-18T03:49:23.259679Z[0m [32m INFO[0m ToolCall: sequential-thinking__sequentialthinking {"thought":"实施计划：1) 列出 constitution 模板并读取内容。2) 列出并解析 placeholder。3) 构思原则与治理内容并决定版本增幅。4) 检查相关模板文件，必要时更新。5) 写入新宪章并包含同步影响报告。6) 准备总结答复与建议提交信息。","thoughtNumber":6,"totalThoughts":6,"nextThoughtNeeded":false}
+[2m2025-10-18T03:49:28.265613Z[0m [32m INFO[0m ToolCall: update_plan {"plan":[{"step":"读取宪章模板并列出全部占位符与现有版本信息","status":"pending"},{"step":"根据项目结构推导原则与治理内容，确定版本号与日期","status":"pending"},{"step":"检查并同步相关模板文件保持一致","status":"pending"},{"step":"写入更新后的宪章并包含同步影响报告","status":"pending"}]}
+[2m2025-10-18T03:49:32.757624Z[0m [32m INFO[0m ToolCall: serena__list_dir {"relative_path":".specify","recursive":false}
+[2m2025-10-18T03:49:38.157943Z[0m [32m INFO[0m ToolCall: serena__list_dir {"relative_path":".specify/memory","recursive":false}
+[2m2025-10-18T03:49:48.904719Z[0m [32m INFO[0m ToolCall: serena__search_for_pattern {"relative_path":".specify/memory/constitution.md","substring_pattern":".","max_answer_chars":20000}
+[2m2025-10-18T03:49:58.361828Z[0m [32m INFO[0m ToolCall: serena__search_for_pattern {"relative_path":".specify/memory/constitution.md","substring_pattern":".","max_answer_chars":500000}
+[2m2025-10-18T03:50:09.079143Z[0m [32m INFO[0m ToolCall: shell {"command":["bash","-lc","sed -n '1,160p' .specify/memory/constitution.md"],"workdir":"/Users/engtyleong/Projects/ClashX.AutoSub"}
+[2m2025-10-18T03:50:26.297881Z[0m [32m INFO[0m ToolCall: shell {"command":["bash","-lc","date +%Y-%m-%d"],"workdir":"/Users/engtyleong/Projects/ClashX.AutoSub"}
+[2m2025-10-18T03:50:36.683953Z[0m [32m INFO[0m ToolCall: update_plan {"plan":[{"step":"读取宪章模板并列出全部占位符与现有版本信息","status":"completed"},{"step":"根据项目结构推导原则与治理内容，确定版本号与日期","status":"pending"},{"step":"检查并同步相关模板文件保持一致","status":"pending"},{"step":"写入更新后的宪章并包含同步影响报告","status":"pending"}]}
+[2m2025-10-18T03:50:51.447131Z[0m [32m INFO[0m ToolCall: shell {"command":["bash","-lc","sed -n '1,160p' .specify/templates/plan-template.md"],"workdir":"/Users/engtyleong/Projects/ClashX.AutoSub"}
+[2m2025-10-18T03:50:59.493453Z[0m [32m INFO[0m ToolCall: shell {"command":["bash","-lc","sed -n '1,200p' .specify/templates/spec-template.md"],"workdir":"/Users/engtyleong/Projects/ClashX.AutoSub"}
+[2m2025-10-18T03:51:05.188429Z[0m [32m INFO[0m ToolCall: shell {"command":["bash","-lc","sed -n '1,200p' .specify/templates/tasks-template.md"],"workdir":"/Users/engtyleong/Projects/ClashX.AutoSub"}
+[2m2025-10-18T03:51:15.878984Z[0m [32m INFO[0m ToolCall: serena__list_dir {"relative_path":".specify/templates/commands","recursive":false}
+[2m2025-10-18T03:51:24.303469Z[0m [32m INFO[0m ToolCall: shell {"command":["bash","-lc","ls .specify/templates"],"workdir":"/Users/engtyleong/Projects/ClashX.AutoSub"}
+[2m2025-10-18T03:52:02.882335Z[0m [32m INFO[0m ToolCall: serena__think_about_task_adherence {}
+[2m2025-10-18T03:52:08.715891Z[0m [32m INFO[0m ToolCall: serena__read_memory {"memory_file_name":"style_and_conventions"}
+[2m2025-10-18T03:52:24.883851Z[0m [32m INFO[0m ToolCall: shell {"command":["bash","-lc","cp .specify/templates/plan-template.md /tmp/plan-template.md.bak"],"workdir":"/Users/engtyleong/Projects/ClashX.AutoSub"}
+[2m2025-10-18T03:52:31.246231Z[0m [32m INFO[0m ToolCall: shell {"command":["bash","-lc","sed -n '1,200p' .specify/templates/plan-template.md"],"workdir":"/Users/engtyleong/Projects/ClashX.AutoSub"}
+[2m2025-10-18T03:53:06.111123Z[0m [32m INFO[0m ToolCall: apply_patch *** Begin Patch
+*** Update File: .specify/templates/plan-template.md
+@@
+ ## Technical Context
+ 
+-<!--
+-  ACTION REQUIRED: Replace the content in this section with the technical details
+-  for the project. The structure here is presented in advisory capacity to guide
+-  the iteration process.
+--->
+-
+-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
+-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
+-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
+-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
+-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+-**Project Type**: [single/web/mobile - determines source structure]  
+-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
+-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
++**语言 / 版本**: TypeScript (React 18) · Node 18 LTS · Rust 1.75 / Tauri 2.0  
++**主要依赖**: React, @tauri-apps/api, TailwindCSS, Zustand, Vitest, tauri-plugin-notification / updater / process / opener / log  
++**存储**: 本地文件（经 `crypto_service` 加密后保存订阅、配置与备份档）  
++**测试**: Vitest、tests/ui（WebDriver）、tests/unit、tests/integration、src-tauri/tests（cargo test）  
++**目标平台**: macOS 13+ 桌面客户端（Tauri 应用）  
++**项目类型**: 单仓 React 前端 + Rust Tauri 宿主  
++**性能目标**: UI 渲染 60fps；批量订阅刷新 < 5 分钟；前端交互主线程响应 < 150ms  
++**约束**: 敏感数据必须加密保存；命令需幂等可重试；遵循 macOS HIG 指南  
++**规模 / 范围**: 单终端桌面应用，核心界面涵盖订阅、模板、设置、更新、托盘与通知模块
+ 
+ ## Constitution Check
+ 
+-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+-
+-[Gates determined based on constitution file]
++*门槛：在 Phase 0 研究前必须全部满足，并在 Phase 1 设计完成后复查。*
++
++- **命令驱动架构**：列出将新增或修改的 Tauri 命令及其 `src/services` 封装，并计划契约 / 集成测试更新。  
++- **敏感数据加密与最小持久化**：明确是否触及订阅、凭证或备份数据，给出加密、备份与回滚策略。  
++- **macOS 原生体验一致性**：描述 UI 受影响的区域，标注需复用的基础组件与主题，并规划暗 / 亮模式验证。  
++- **可恢复的自动化运营**：定义批量任务 / 系统集成的状态流、日志与失败重试策略，保障可恢复性。  
++- **全链路测试准入**：罗列 Vitest、tests/ui、tests/integration、src-tauri/tests 等必备覆盖，说明先写测试再实现的步骤。
+ 
+ ## Project Structure
+ 
+ ### Documentation (this feature)
+ 
+ ```
+ specs/[###-feature]/
+-├── plan.md              # This file (/speckit.plan command output)
+-├── research.md          # Phase 0 output (/speckit.plan command)
+-├── data-model.md        # Phase 1 output (/speckit.plan command)
+-├── quickstart.md        # Phase 1 output (/speckit.plan command)
+-├── contracts/           # Phase 1 output (/speckit.plan command)
+-└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
++├── plan.md              # /speckit.plan 输出
++├── research.md          # Phase 0 研究
++├── data-model.md        # Phase 1 数据模型
++├── quickstart.md        # Phase 1 快速上手
++├── contracts/           # Phase 1 契约定义
++└── tasks.md             # Phase 2 /speckit.tasks 生成
+ ```
+ 
+ ### Source Code (repository root)
+-<!--
+-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
+-  for this feature. Delete unused options and expand the chosen structure with
+-  real paths (e.g., apps/admin, packages/something). The delivered plan must
+-  not include Option labels.
+--->
+ 
+ ```
+-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
+ src/
+-├── models/
+-├── services/
+-├── cli/
+-└── lib/
+-
++├── components/          # UI 模块（订阅、模板、设置、更新、通用组件等）
++├── hooks/               # 业务 Hooks（状态、主题、通知、托盘等）
++├── services/            # 前端 API / 存储封装
++├── utils/               # 工具与校验
++├── types/               # 类型声明
++└── styles/              # Tailwind 全局样式
++
++src-tauri/
++├── src/
++│   ├── commands/        # Tauri 命令暴露层
++│   ├── services/        # 后端核心服务（备份、模板、更新等）
++│   ├── models/          # 配置 / 订阅 / 模板结构体
++│   └── utils/
++├── tauri.conf.json
++└── Cargo.toml
++
+ tests/
+-├── contract/
+-├── integration/
+-└── unit/
+-
+-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
+-backend/
+-├── src/
+-│   ├── models/
+-│   ├── services/
+-│   └── api/
+-└── tests/
+-
+-frontend/
+-├── src/
+-│   ├── components/
+-│   ├── pages/
+-│   └── services/
+-└── tests/
+-
+-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
+-api/
+-└── [same as backend above]
+-
+-ios/ or android/
+-└── [platform-specific structure: feature modules, UI flows, platform tests]
++├── unit/                # Vitest 组件 / Hook 单测
++├── integration/         # 集成用例（待补充）
++├── contract/            # 合同测试（Vitest）
++├── ui/                  # WebDriver UI 测试
++└── utils/               # 测试辅助工具
++
++assets/
++├── icons/
++└── templates/
++
++docs/
++└── macOS-HIG-Implementation.md
+ ```
+ 
+-**Structure Decision**: [Document the selected structure and reference the real
+-directories captured above]
++**Structure Decision**: 采用单仓结构：React 前端置于 `src/`，Rust Tauri 后端位于 `src-tauri/`，公共测试放在 `tests/`，资产与文档分别在 `assets/`、`docs/`。
+*** End Patch
+[2m2025-10-18T03:53:16.585560Z[0m [32m INFO[0m ToolCall: apply_patch *** Begin Patch
+*** Update File: .specify/templates/plan-template.md
+@@
+-*门槛：在 Phase 0 研究前必须全部满足，并在 Phase 1 设计完成后复查。*
+-
+-- **命令驱动架构**：列出将新增或修改的 Tauri 命令及其 `src/services` 封装，并计划契约 / 集成测试更新。  
+-- **敏感数据加密与最小持久化**：明确是否触及订阅、凭证或备份数据，给出加密、备份与回滚策略。  
+-- **macOS 原生体验一致性**：描述 UI 受影响的区域，标注需复用的基础组件与主题，并规划暗 / 亮模式验证。  
+-- **可恢复的自动化运营**：定义批量任务 / 系统集成的状态流、日志与失败重试策略，保障可恢复性。  
+-- **全链路测试准入**：罗列 Vitest、tests/ui、tests/integration、src-tauri/tests 等必备覆盖，说明先写测试再实现的步骤。
++*门槛：在 Phase 0 研究前必须全部满足，并在 Phase 1 设计完成后复查。*
++
++- **命令驱动架构**：列出将新增或修改的 Tauri 命令及其 `src/services` 封装，并计划契约 / 集成测试更新。
++- **敏感数据加密与最小持久化**：明确是否触及订阅、凭证或备份数据，给出加密、备份与回滚策略。
++- **macOS 原生体验一致性**：描述 UI 受影响的区域，标注需复用的基础组件与主题，并规划暗 / 亮模式验证。
++- **可恢复的自动化运营**：定义批量任务 / 系统集成的状态流、日志与失败重试策略，保障可恢复性。
++- **全链路测试准入**：罗列 Vitest、tests/ui、tests/integration、src-tauri/tests 等必备覆盖，说明先写测试再实现的步骤。
+*** End Patch
+[2m2025-10-18T03:53:31.292233Z[0m [32m INFO[0m ToolCall: apply_patch *** Begin Patch
+*** Update File: .specify/templates/spec-template.md
+@@
+ ### Key Entities *(include if feature involves data)*
+ 
+ - **[Entity 1]**: [What it represents, key attributes without implementation]
+ - **[Entity 2]**: [What it represents, relationships to other entities]
+ 
++## 宪章符合性说明 *(mandatory)*
++
++- **命令驱动架构**：列出受影响的 Tauri 命令、`src/services` 封装、前端 Hook/组件，并描述契约或集成测试更新计划。  
++- **敏感数据加密与最小持久化**：说明是否读写订阅、模板、凭证、备份数据，明确加密策略、备份链路与回滚方案。  
++- **macOS 原生体验一致性**：概述 UI 影响范围、需复用的基础组件、主题要求以及暗 / 亮模式、托盘状态等验证方式。  
++- **可恢复的自动化运营**：标注自动更新、批量任务或系统集成的状态记录、日志与失败重试要求。  
++- **全链路测试准入**：规划 Vitest、tests/ui、tests/integration、src-tauri/tests 等覆盖，并明确“先写失败测试再实现”的步骤。
++
+ ## Success Criteria *(mandatory)*
+ 
+ <!--
+   ACTION REQUIRED: Define measurable success criteria.
+   These must be technology-agnostic and measurable.
+*** End Patch
+[2m2025-10-18T03:53:42.372485Z[0m [32m INFO[0m ToolCall: apply_patch *** Begin Patch
+*** Update File: .specify/templates/spec-template.md
+@@
+-## 宪章符合性说明 *(mandatory)*
+-
+-- **命令驱动架构**：列出受影响的 Tauri 命令、`src/services` 封装、前端 Hook/组件，并描述契约或集成测试更新计划。  
+-- **敏感数据加密与最小持久化**：说明是否读写订阅、模板、凭证、备份数据，明确加密策略、备份链路与回滚方案。  
+-- **macOS 原生体验一致性**：概述 UI 影响范围、需复用的基础组件、主题要求以及暗 / 亮模式、托盘状态等验证方式。  
+-- **可恢复的自动化运营**：标注自动更新、批量任务或系统集成的状态记录、日志与失败重试要求。  
+-- **全链路测试准入**：规划 Vitest、tests/ui、tests/integration、src-tauri/tests 等覆盖，并明确“先写失败测试再实现”的步骤。
++## 宪章符合性说明 *(mandatory)*
++
++- **命令驱动架构**：列出受影响的 Tauri 命令、`src/services` 封装、前端 Hook/组件，并描述契约或集成测试更新计划。
++- **敏感数据加密与最小持久化**：说明是否读写订阅、模板、凭证、备份数据，明确加密策略、备份链路与回滚方案。
++- **macOS 原生体验一致性**：概述 UI 影响范围、需复用的基础组件、主题要求以及暗 / 亮模式、托盘状态等验证方式。
++- **可恢复的自动化运营**：标注自动更新、批量任务或系统集成的状态记录、日志与失败重试要求。
++- **全链路测试准入**：规划 Vitest、tests/ui、tests/integration、src-tauri/tests 等覆盖，并明确“先写失败测试再实现”的步骤。
+*** End Patch
+[2m2025-10-18T03:53:57.158083Z[0m [32m INFO[0m ToolCall: apply_patch *** Begin Patch
+*** Update File: .specify/templates/tasks-template.md
+@@
+-**Tests**: The examples below include test tasks. Tests are OPTIONAL - only include them if explicitly requested in the feature specification.
++**Tests**: 所有功能必须先编写失败的测试（Vitest、tests/ui、src-tauri/tests 等），除非规格文档注明豁免并记录理由。
+@@
+-### Tests for User Story 1 (OPTIONAL - only if tests requested) ⚠️
+-
+-**NOTE: Write these tests FIRST, ensure they FAIL before implementation**
++### Tests for User Story 1（必写，先写后实现）⚠️
++
++**NOTE: 先编写并运行这些测试，确认失败后再进入实现阶段**
+@@
+-### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
++### Tests for User Story 2（必写，先写后实现）⚠️
+@@
+-### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
++### Tests for User Story 3（必写，先写后实现）⚠️
+*** End Patch
+[2m2025-10-18T03:54:04.839694Z[0m [32m INFO[0m ToolCall: shell {"command":["bash","-lc","grep -n \"OPTIONAL\" .specify/templates/tasks-template.md"],"workdir":"/Users/engtyleong/Projects/ClashX.AutoSub"}
+[2m2025-10-18T03:54:55.933222Z[0m [32m INFO[0m ToolCall: apply_patch *** Begin Patch
+*** Update File: .specify/memory/constitution.md
+@@
+-# [PROJECT_NAME] Constitution
+-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+-
+-## Core Principles
+-
+-### [PRINCIPLE_1_NAME]
+-<!-- Example: I. Library-First -->
+-[PRINCIPLE_1_DESCRIPTION]
+-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+-
+-### [PRINCIPLE_2_NAME]
+-<!-- Example: II. CLI Interface -->
+-[PRINCIPLE_2_DESCRIPTION]
+-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+-
+-### [PRINCIPLE_3_NAME]
+-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
+-[PRINCIPLE_3_DESCRIPTION]
+-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+-
+-### [PRINCIPLE_4_NAME]
+-<!-- Example: IV. Integration Testing -->
+-[PRINCIPLE_4_DESCRIPTION]
+-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+-
+-### [PRINCIPLE_5_NAME]
+-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
+-[PRINCIPLE_5_DESCRIPTION]
+-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+-
+-## [SECTION_2_NAME]
+-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+-
+-[SECTION_2_CONTENT]
+-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+-
+-## [SECTION_3_NAME]
+-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+-
+-[SECTION_3_CONTENT]
+-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+-
+-## Governance
+-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+-
+-[GOVERNANCE_RULES]
+-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+-
+-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
+-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
++<!--
++Sync Impact Report
++Version change: N/A -> 1.0.0
++Modified principles: 新增 I. 命令驱动架构, II. 敏感数据加密与最小持久化, III. macOS 原生体验一致性, IV. 可恢复的自动化运营, V. 全链路测试准入
++Added sections: 技术栈与兼容性约束; 交付流程与审查
++Removed sections: 无
++Templates requiring updates:
++- ✅ .specify/templates/plan-template.md
++- ✅ .specify/templates/spec-template.md
++- ✅ .specify/templates/tasks-template.md
++Follow-up TODOs: 无
++-->
++# ClashX AutoSub Constitution
++
++## Core Principles
++
++### I. 命令驱动架构
++- 所有跨进程能力必须在 `src-tauri/src/commands` 中实现为 Tauri 命令，并保持幂等；新增命令需同步更新 `tauri.conf.json` 与前端类型。
++- 前端逻辑必须通过 `src/services` 或业务 Hook 调用命令，禁止在组件中直接 `invoke` 未封装的指令。
++- 修改命令签名时必须先更新 `tests/contract`、`tests/ui` 或 `src-tauri/tests/contract` 契约测试并观察失败，再调整实现与文档。
++**理由**：统一命令入口确保前后端行为一致，便于审计、回滚与未来扩展。
++
++### II. 敏感数据加密与最小持久化
++- 处理订阅、凭证、备份的代码必须通过 `crypto_service`、`storage.ts` 等封装进行加密与命名空间隔离，禁止明文落盘。
++- 所有新增敏感字段必须在模型（如 `AppConfig`、`Subscription`）中声明加密策略，并同步更新备份/恢复流程与校验。
++- 发布前需验证导入、导出、自动备份路径在成功与失败场景下均不泄露敏感数据。
++**理由**：项目直接管理用户订阅与凭证，强制加密与最小持久化可降低泄露风险并维护信任。
++
++### III. macOS 原生体验一致性
++- UI 变更必须复用 `src/components/UI` 与主题 Hook（`useTheme`、`useMacOSTheme`），遵循 `docs/macOS-HIG-Implementation.md` 指南。
++- 新增界面需覆盖暗/亮模式、窗口尺寸、托盘状态（若适用）测试，可通过 Vitest snapshot、`tests/ui` 脚本或手动脚本记录。
++- 引入第三方样式或视觉偏差时必须在规格文档中记录原因、持续时间与回滚方案。
++**理由**：macOS 原生体验是核心卖点，统一组件与主题可保持一致性、提升可维护性。
++
++### IV. 可恢复的自动化运营
++- 自动更新、批量订阅、托盘、系统集成等长期任务必须复用 `src-tauri/src/services` 中的对应服务，并输出可追踪的进度与日志。
++- 批量或长时操作需设计失败重试与回滚策略，并在 UI 中通过 `RealTimeStatusIndicator`、`Toast` 等组件提示状态。
++- 任何可能影响运行稳定性的改动必须提供调试日志开关与备份路径验证，确保异常时可恢复。
++**理由**：保持自动化能力可用且可恢复，能够降低运维成本并保护用户体验。
++
++### V. 全链路测试准入
++- 每个功能必须先编写 Vitest 单元/组件测试并运行失败，再实现功能；影响 Rust 后端时需同步编写 `cargo test` 用例。
++- 涉及命令协议或 UI 流程的改动必须更新 `tests/ui` 或集成测试，确保端到端路径可回归。
++- 若出现无法立即覆盖的测试缺口，必须在计划与规格中记录并获得维护者批准。
++**理由**：前端与 Tauri 端的多层测试是保证桌面应用稳定性的根基。
++
++## 技术栈与兼容性约束
++
++- **前端栈**：React 18 + TypeScript + Vite + TailwindCSS；新增依赖需评估体积、Tree Shaking 效果与 macOS 原生视觉一致性。
++- **桌面宿主**：Tauri 2.0（Rust 2021）；命令需异步实现，禁止阻塞主线程或破坏多平台兼容性。
++- **插件**：默认启用通知、更新、进程、打开器、日志插件；新增或调整插件需更新 `tauri.conf.json` 并提供安全评估。
++- **资源管理**：图标与模板置于 `assets/`，必须说明来源与使用许可；相关文档更新同步至 `docs/`。
++
++## 交付流程与审查
++
++- **文档链路**：新增功能前需完成 `specs/[feature]/` 下的 spec → plan → tasks 闭环，并在计划中的 “Constitution Check” 逐项确认。
++- **评审资料**：PR 必须引用受影响的命令、服务、组件与文档，附带 Vitest、`npm run test:coverage`（如适用）、`cargo test`、关键 UI 测试结果。
++- **发布与回滚**：涉及配置结构或数据迁移时，需提供迁移脚本与回滚方案，并在发布说明中列明。
++- **运行验证**：发布候选版本必须进行 Tauri 打包 Smoke 测试，覆盖订阅更新、备份恢复、托盘操作等核心流程。
++
++## Governance
++
++- 宪章优先于其它流程文档；若出现冲突，必须先更新宪章或相关文档以恢复一致。
++- 修订流程：提案需附带影响分析、版本号建议与迁移/沟通计划，经项目维护者审查后方可合并。
++- 版本策略：遵循语义化版本，新增原则或治理扩展记为 MINOR，原则重写或移除记为 MAJOR，措辞澄清记为 PATCH。
++- 合规审查：每次发布或里程碑前由维护者执行宪章核查，并在发布说明或 `docs/` 中记录结果。
++
++**Version**: 1.0.0 | **Ratified**: 2025-10-18 | **Last Amended**: 2025-10-18**
+*** End Patch
+[2m2025-10-18T03:55:03.207115Z[0m [32m INFO[0m ToolCall: apply_patch *** Begin Patch
+*** Update File: .specify/memory/constitution.md
+@@
+-**Version**: 1.0.0 | **Ratified**: 2025-10-18 | **Last Amended**: 2025-10-18**
++**Version**: 1.0.0 | **Ratified**: 2025-10-18 | **Last Amended**: 2025-10-18
+*** End Patch
+[2m2025-10-18T03:55:09.538603Z[0m [32m INFO[0m ToolCall: shell {"command":["bash","-lc","grep -n '\\[' .specify/memory/constitution.md"],"workdir":"/Users/engtyleong/Projects/ClashX.AutoSub"}
+[2m2025-10-18T03:55:16.537493Z[0m [32m INFO[0m ToolCall: update_plan {"plan":[{"step":"读取宪章模板并列出全部占位符与现有版本信息","status":"completed"},{"step":"根据项目结构推导原则与治理内容，确定版本号与日期","status":"completed"},{"step":"检查并同步相关模板文件保持一致","status":"completed"},{"step":"写入更新后的宪章并包含同步影响报告","status":"pending"}]}
+[2m2025-10-18T03:55:23.812333Z[0m [32m INFO[0m ToolCall: shell {"command":["bash","-lc","git status --short"],"workdir":"/Users/engtyleong/Projects/ClashX.AutoSub"}
+[2m2025-10-18T03:55:29.743442Z[0m [32m INFO[0m ToolCall: shell {"command":["bash","-lc","git diff .specify/memory/constitution.md"],"workdir":"/Users/engtyleong/Projects/ClashX.AutoSub"}
+[2m2025-10-18T03:55:36.077891Z[0m [32m INFO[0m ToolCall: shell {"command":["bash","-lc","git diff .specify/templates/plan-template.md"],"workdir":"/Users/engtyleong/Projects/ClashX.AutoSub"}
+[2m2025-10-18T03:55:42.428517Z[0m [32m INFO[0m ToolCall: shell {"command":["bash","-lc","git diff .specify/templates/spec-template.md"],"workdir":"/Users/engtyleong/Projects/ClashX.AutoSub"}
+[2m2025-10-18T03:55:48.547348Z[0m [32m INFO[0m ToolCall: shell {"command":["bash","-lc","git diff .specify/templates/tasks-template.md"],"workdir":"/Users/engtyleong/Projects/ClashX.AutoSub"}
+[2m2025-10-18T03:55:53.605416Z[0m [32m INFO[0m ToolCall: update_plan {"plan":[{"step":"读取宪章模板并列出全部占位符与现有版本信息","status":"completed"},{"step":"根据项目结构推导原则与治理内容，确定版本号与日期","status":"completed"},{"step":"检查并同步相关模板文件保持一致","status":"completed"},{"step":"写入更新后的宪章并包含同步影响报告","status":"completed"}]}
+[2m2025-10-18T03:55:59.262169Z[0m [32m INFO[0m ToolCall: serena__think_about_whether_you_are_done {}
+[2m2025-10-18T03:56:09.938795Z[0m [32m INFO[0m ToolCall: shell {"command":["bash","-lc","nl -ba .specify/memory/constitution.md | sed -n '1,160p'"],"workdir":"/Users/engtyleong/Projects/ClashX.AutoSub"}
+[2m2025-10-18T03:56:19.763165Z[0m [32m INFO[0m ToolCall: shell {"command":["bash","-lc","nl -ba .specify/templates/plan-template.md | sed -n '1,200p'"],"workdir":"/Users/engtyleong/Projects/ClashX.AutoSub"}
+[2m2025-10-18T03:56:27.492898Z[0m [32m INFO[0m ToolCall: shell {"command":["bash","-lc","nl -ba .specify/templates/spec-template.md | sed -n '90,150p'"],"workdir":"/Users/engtyleong/Projects/ClashX.AutoSub"}
+[2m2025-10-18T03:56:35.570030Z[0m [32m INFO[0m ToolCall: shell {"command":["bash","-lc","nl -ba .specify/templates/tasks-template.md | sed -n '1,220p'"],"workdir":"/Users/engtyleong/Projects/ClashX.AutoSub"}
+[2m2025-10-18T04:13:16.539776Z[0m [32m INFO[0m ERR: No such file or directory (os error 2)
