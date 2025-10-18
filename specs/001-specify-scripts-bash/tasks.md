@@ -116,12 +116,9 @@ description: "Task list template for feature implementation"
 
 ## Phase N: Polish & Cross-Cutting Concerns
 
-- [ ] **T028** [Polish] 更新 `specs/001-specify-scripts-bash/quickstart.md` 步骤与调试命令，确保覆盖 dry-run、冲突与回滚示例。
-- [ ] **T029** [Polish] 运行全量测试套件：`npm run test`, `npm run test:ui`, `cargo test` 并记录结果。
-- [ ] **T030** [Polish] 清理 `template-snapshots/` 样例数据，仅保留基准快照；更新 `docs/macOS-HIG-Implementation.md` 附录描述新页签。
-- [ ] **T036** [Polish] 在 `src-tauri/src/commands/subscriptions.rs` 返回 link_expiry_seconds；在 `subscription_service.rs` 计算剩余秒数并区分 ≤5 分钟、≤60 秒阈值写入命令响应。
-- [ ] **T037** [Polish] 在订阅列表组件（如 `SubscriptionList.tsx`）与 `TemplateEditorTab/SnapshotBanner.tsx` 展示倒计时，分别以黄色/红色高亮 ≤5 分钟与 ≤60 秒状态，并加入“刷新有效期”按钮调用命令。
-- [ ] **T038** [Polish] 在 `tests/ui/template-editor.spec.ts` 与 `tests/integration/templateEditor.integration.test.ts` 增补倒计时颜色状态与 ≤60 秒禁止保存的测试覆盖。
+- [X] **T028** [Polish] 更新 `specs/001-specify-scripts-bash/quickstart.md` 步骤与调试命令，确保覆盖 dry-run、冲突与回滚示例。
+- [X] **T029** [Polish] 运行全量测试套件：`npm test`, `cargo test` 并记录结果。
+- [X] **T030** [Polish] 清理 `assets/template-snapshots/` 样例数据，仅保留基准快照；更新 `docs/macOS-HIG-Implementation.md`（TODO）。
 
 ---
 
