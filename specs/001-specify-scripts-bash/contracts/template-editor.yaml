@@ -1,0 +1,169 @@
+openapi: 3.1.0
+info:
+  title: Template Editor API
+  version: 0.1.0
+servers:
+  - url: tauri://localhost
+paths:
+  /template/validate:
+    post:
+      summary: Dry-run validate and normalize template
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [templateYaml, context]
+              properties:
+                templateYaml:
+                  type: string
+                  description: Raw YAML content to validate
+                context:
+                  type: object
+                  properties:
+                    source:
+                      type: string
+                      enum: [ui-form, custom-text]
+                    snapshotId:
+                      type: string
+                      format: uuid
+                      nullable: true
+      responses:
+        "200":
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [valid, normalizedYaml]
+                properties:
+                  valid:
+                    type: boolean
+                  normalizedYaml:
+                    type: string
+                  schemaErrors:
+                    type: array
+                    items:
+                      type: string
+                  dryRunErrors:
+                    type: array
+                    items:
+                      type: string
+        "422":
+          description: Malformed payload
+  /template/save:
+    post:
+      summary: Persist template, create snapshot and audit log
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [templateYaml, metadata]
+              properties:
+                templateYaml:
+                  type: string
+                metadata:
+                  type: object
+                  required: [actor]
+                  properties:
+                    actor:
+                      type: string
+                    customConfig:
+                      type: string
+                      nullable: true
+                    filters:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id: { type: string }
+                          type: { type: string }
+                          value: { type: string }
+      responses:
+        "201":
+          description: Snapshot created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  snapshotId:
+                    type: string
+                    format: uuid
+                  auditId:
+                    type: string
+                    format: uuid
+        "409":
+          description: Detected template conflict. Client must refresh.
+        "422":
+          description: Validation failed. Includes dry-run & schema errors.
+  /template/snapshots:
+    get:
+      summary: List latest template snapshots
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 10
+      responses:
+        "200":
+          description: Snapshot list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, createdAt, createdBy, diffSummary, hasCustomConfig]
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        createdAt:
+                          type: string
+                          format: date-time
+                        createdBy:
+                          type: string
+                        diffSummary:
+                          type: string
+                        hasCustomConfig:
+                          type: boolean
+  /template/logs:
+    get:
+      summary: Retrieve most recent template audit logs
+      responses:
+        "200":
+          description: Audit log entries
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, action, actor, createdAt, detail]
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        action:
+                          type: string
+                          enum: [validate, save-success, save-failed, rollback]
+                        actor:
+                          type: string
+                        createdAt:
+                          type: string
+                          format: date-time
+                        detail:
+                          type: string
