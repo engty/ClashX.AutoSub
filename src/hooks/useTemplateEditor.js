@@ -1,5 +1,10 @@
 import { updateProviderLink } from "../services/subscriptionAPI.js";
-import { saveTemplateSnapshot, validateTemplateYaml } from "../services/templateAPI.js";
+import {
+  saveTemplateSnapshot,
+  validateTemplateYaml,
+  exportTemplate as exportTemplateApi,
+  importTemplate as importTemplateApi,
+} from "../services/templateAPI.js";
 import { recordOperation, resetOperations } from "../state/templateOperations.js";
 import {
   storeFusionResult,
@@ -91,6 +96,17 @@ export async function applyCustomYaml(serialized) {
   }
   await validateTemplateYaml(serialized);
   state.template = parseTemplate(serialized);
+  state.diffPaths = [];
+}
+
+export async function exportTemplate(password) {
+  const yaml = getTemplateYaml();
+  return exportTemplateApi(password, yaml);
+}
+
+export async function importTemplate(password, encrypted) {
+  const yaml = await importTemplateApi(password, encrypted);
+  state.template = parseTemplate(yaml);
   state.diffPaths = [];
 }
 

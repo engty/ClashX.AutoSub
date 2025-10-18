@@ -36,3 +36,11 @@ pub fn fusion_history() -> Vec<FusionTestResult> {
 pub fn rollback_fusion(region: &str) -> Option<FusionTestResult> {
     template_service::rollback_fusion(region)
 }
+
+pub fn export_template(template_yaml: &str, password: &str) -> String {
+    template_service::export_template(template_yaml, password)
+}
+
+pub fn import_template(encrypted: &str, password: &str) -> Result<String, TemplateError> {
+    template_service::import_template(encrypted, password)
+}

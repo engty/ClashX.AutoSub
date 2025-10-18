@@ -1,4 +1,9 @@
-import { getDiffPaths, getTemplateState } from "../../../hooks/useTemplateEditor.js";
+import {
+  getDiffPaths,
+  getTemplateState,
+  exportTemplate,
+  importTemplate,
+} from "../../../hooks/useTemplateEditor.js";
 import { createDiffViewer } from "./DiffViewer.js";
 import { createConflictDialog } from "./ConflictDialog.js";
 import { createSnapshotBanner } from "./SnapshotBanner.js";
@@ -21,5 +26,12 @@ export function createTemplateEditorTab() {
     conflicts: conflictDialog.messages,
     hasAdvancedPermission: state.hasAdvancedPermission,
     snapshots,
+    async export(password) {
+      return exportTemplate(password);
+    },
+    async importData(password, encrypted) {
+      await importTemplate(password, encrypted);
+      return getTemplateState();
+    },
   };
 }

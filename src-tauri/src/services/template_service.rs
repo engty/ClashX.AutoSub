@@ -2,6 +2,7 @@ use crate::models::template::{
     FusionMetric, FusionStatus, FusionTestResult, TemplateSnapshot,
 };
 use crate::services::audit_log_service;
+use base64::{engine::general_purpose, Engine as _};
 use once_cell::sync::Lazy;
 use serde_json::Value;
 use serde_yaml;
@@ -27,6 +28,10 @@ pub enum TemplateError {
     ProviderMissingUrl(String),
     #[error("融合测试数据为空")]
     EmptyFusionMetrics,
+    #[error("导出内容格式无效")]
+    InvalidExportFormat,
+    #[error("导入口令不正确")]
+    InvalidPassword,
 }
 
 static FUSION_RESULTS: Lazy<Mutex<Vec<FusionTestResult>>> = Lazy::new(|| Mutex::new(Vec::new()));
@@ -165,4 +170,23 @@ pub fn rollback_fusion(region: &str) -> Option<FusionTestResult> {
         }
     }
     None
+}
+
+pub fn export_template(template_yaml: &str, password: &str) -> String {
+    let payload = format!("{password}::{template_yaml}");
+    general_purpose::STANDARD.encode(payload.as_bytes())
+}
+
+pub fn import_template(encrypted: &str, password: &str) -> Result<String, TemplateError> {
+    let decoded = general_purpose::STANDARD
+        .decode(encrypted)
+        .map_err(|_| TemplateError::InvalidExportFormat)?;
+    let decoded_str = String::from_utf8(decoded).map_err(|_| TemplateError::InvalidExportFormat)?;
+    let prefix = format!("{password}::");
+    if !decoded_str.starts_with(&prefix) {
+        return Err(TemplateError::InvalidPassword);
+    }
+    let template_yaml = &decoded_str[prefix.len()..];
+    perform_dry_run(template_yaml)?;
+    Ok(template_yaml.to_string())
 }
