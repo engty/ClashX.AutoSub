@@ -2,6 +2,7 @@ import { runTemplateEditorTabTests } from "../src/components/Subscription/Templa
 import { runUseTemplateEditorFusionTests } from "../src/hooks/__tests__/useTemplateEditor.test.js";
 import { runIntegrationTests } from "./integration/template_editor_integration_test.js";
 import { runUiTests } from "./ui/template-editor.spec.js";
+import { runCountdownTests } from "./ui/template-editor.spec.js";
 import { runExportImportFailureTests } from "./import/export_import_failure.test.js";
 
 async function main() {
@@ -33,9 +34,16 @@ async function main() {
 
   try {
     await runUiTests();
-    results.push("UI 测试通过");
+    results.push("UI 流程测试通过");
   } catch (err) {
-    console.error("UI 测试失败:", err);
+    console.error("UI 流程测试失败:", err);
+    process.exitCode = 1;
+  }
+
+  try {
+    await runCountdownTests();
+  } catch (err) {
+    console.error("倒计时测试失败:", err);
     process.exitCode = 1;
   }
 

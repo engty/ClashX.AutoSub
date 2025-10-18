@@ -118,7 +118,7 @@ description: "Task list template for feature implementation"
 
 - [X] **T028** [Polish] 更新 `specs/001-specify-scripts-bash/quickstart.md` 步骤与调试命令，确保覆盖 dry-run、冲突与回滚示例。
 - [X] **T029** [Polish] 运行全量测试套件：`npm test`, `cargo test` 并记录结果。
-- [X] **T030** [Polish] 清理 `assets/template-snapshots/` 样例数据，仅保留基准快照；更新 `docs/macOS-HIG-Implementation.md`（TODO）。
+- [X] **T030** [Polish] 清理 `assets/template-snapshots/` 样例数据，仅保留基准快照；更新 `docs/macOS-HIG-Implementation.md`。
 
 ---
 

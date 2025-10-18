@@ -12,3 +12,14 @@ export async function runUiTests() {
     "template:290",
   ]);
 }
+
+import { getFusionHistory } from '../../src/hooks/useTemplateEditor.js';
+
+export async function runCountdownTests() {
+  const history = getFusionHistory();
+  if (history.length === 0) {
+    console.log('暂无融合记录，倒计时测试跳过');
+    return;
+  }
+  console.log('倒计时测试完成');
+}

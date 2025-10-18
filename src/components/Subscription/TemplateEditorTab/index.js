@@ -12,7 +12,13 @@ export function createTemplateEditorTab() {
   const diffPaths = getDiffPaths();
   const diffViewer = createDiffViewer(state.templateYaml, diffPaths);
   const conflictDialog = createConflictDialog(diffViewer.paths.length > 0);
-  const snapshots = createSnapshotBanner();
+  const snapshots = createSnapshotBanner(fetchExpirySeconds);
+  function fetchExpirySeconds(region) {
+    if (typeof window !== 'undefined' && window.fetchExpirySeconds) {
+      return window.fetchExpirySeconds(region);
+    }
+    return 300;
+  }
   const controls = createImportExportControls();
 
   const sections = ["providers", "rules", "diff"];
