@@ -17,3 +17,19 @@ ClashX/goClash/goClash.a
 fastlane/report.xml
 ClashX/Resources/Country.mmdb.gz
 .bundle/config
+
+# Node / Tauri workspace
+node_modules/
+dist/
+build/
+coverage/
+*.log
+.env*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Rust target artifacts
+src-tauri/target/
+target/
+Cargo.lock

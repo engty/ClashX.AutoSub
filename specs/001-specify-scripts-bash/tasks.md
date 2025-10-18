@@ -18,9 +18,9 @@ description: "Task list template for feature implementation"
 
 ## Phase 1: Setup (共享基础设施)
 
-- [ ] **T001** [Setup] 在 `package.json` 中新增 `yaml` 依赖并执行 `npm install`；同步更新 `package-lock.json`。
-- [ ] **T002** [Setup] 在 `src-tauri/Cargo.toml` 添加 `clash-rs`（或同等解析库）与必需 feature，运行 `cargo fetch` 验证。
-- [ ] **T003** [Setup] 创建 `assets/template-snapshots/`、`assets/template-snapshots/.gitkeep` 并更新 `.gitignore`，确保快照/日志目录存在。
+- [X] **T001** [Setup] 在 `package.json` 中新增 `yaml` 依赖并执行 `npm install`；同步更新 `package-lock.json`。
+- [X] **T002** [Setup] 在 `src-tauri/Cargo.toml` 添加 `clash-rs`（或同等解析库）与必需 feature，运行 `cargo fetch` 验证。
+- [X] **T003** [Setup] 创建 `assets/template-snapshots/`、`assets/template-snapshots/.gitkeep` 并更新 `.gitignore`，确保快照/日志目录存在。
 
 ---
 
@@ -28,9 +28,9 @@ description: "Task list template for feature implementation"
 
 **目的**: 提供所有用户故事共用的验证与数据骨架。
 
-- [ ] **T004** [Foundation] 在 `src/utils/validationSchemas.ts` 定义模板 JSON Schema；同时生成 `src-tauri/src/models/template_schema.json` 供 Rust 载入。
-- [ ] **T005** [Foundation] 新建 `src/services/templateAPI.ts` 与 `src/services/auditLog.ts` 框架函数（调用 Tauri 命令，暂返 `TODO`）。
-- [ ] **T006** [Foundation] 在 `src-tauri/src/commands/templates.rs`、`src-tauri/src/services/template_service.rs`、`src-tauri/src/services/audit_log_service.rs` 创建命令/服务骨架，暂返回 `unimplemented!()`；确保编译通过。
+- [X] **T004** [Foundation] 在 `src/utils/validationSchemas.ts` 定义模板 JSON Schema；同时生成 `src-tauri/src/models/template_schema.json` 供 Rust 载入。
+- [X] **T005** [Foundation] 新建 `src/services/templateAPI.ts` 与 `src/services/auditLog.ts` 框架函数（调用 Tauri 命令，暂返 `TODO`）。
+- [X] **T006** [Foundation] 在 `src-tauri/src/commands/templates.rs`、`src-tauri/src/services/template_service.rs`、`src-tauri/src/services/audit_log_service.rs` 创建命令/服务骨架，暂返回 `unimplemented!()`；确保编译通过。
 
 **Checkpoint**: 骨架代码可编译，命令与服务已暴露但尚未实现业务逻辑。
 

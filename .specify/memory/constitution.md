@@ -5,6 +5,7 @@ Modified sections: 交付流程与审查（新增交互式对话前提交摘要 
 Added sections: 无
 Removed sections: 无
 Templates requiring updates:
+
 - ✅ .specify/templates/plan-template.md
 - ✅ .specify/templates/spec-template.md
 - ✅ .specify/templates/tasks-template.md
@@ -55,7 +56,7 @@ Follow-up TODOs: 无
 
 - **文档链路**：新增功能前需完成 `specs/[feature]/` 下的 spec → plan → tasks 闭环，并在计划中的 “Constitution Check” 逐项确认。
 - **评审资料**：PR 必须引用受影响的命令、服务、组件与文档，附带 Vitest、`npm run test:coverage`（如适用）、`cargo test`、关键 UI 测试结果。
-- **交互提交**：在交互式对话中若需修改代码，动手前必须基于当次对话撰写简明摘要并完成一次 git commit，以便后续可通过版本回滚撤销对应改动。
+- **交互提交**：在交互式对话中若需修改代码，动手前必须基于当次对话撰写简明摘要并完成一次 git commit（使用中文注释），以便后续可通过版本回滚撤销对应改动。
 - **发布与回滚**：涉及配置结构或数据迁移时，需提供迁移脚本与回滚方案，并在发布说明中列明。
 - **运行验证**：发布候选版本必须进行 Tauri 打包 Smoke 测试，覆盖订阅更新、备份恢复、托盘操作等核心流程。
 
