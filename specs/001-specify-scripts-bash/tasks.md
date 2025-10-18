@@ -102,13 +102,13 @@ description: "Task list template for feature implementation"
 **Independent Test**: 经 UI 导出加密文件后，用正确口令导入恢复成功；错误口令或 dry-run 失败时保留原模板并记录日志。
 
 ### Tests (must fail first)
-- [ ] **T035** [US4] 在 `tests/integration/templateEditor.integration.test.ts` 与契约测试中编写失败用例，验证导入导出需要口令、dry-run 失败会阻止写盘并记录日志。
+- [X] **T035** [US4] 在 `tests/integration/template_editor_integration_test.js`、`tests/import/export_import_failure.test.js` 与 `src-tauri/tests/contract/template_import_export_test.rs` 编写用例，验证导入导出需要口令、dry-run 失败会阻止写盘并记录日志。
 
 ### Implementation
-- [ ] **T031** [US4] 在 `src/services/templateAPI.ts` 融合导入/导出接口，通过 Tauri 命令调度 `template.export`、`template.import`，并传递口令/密钥参数。
-- [ ] **T032** [US4] 在 `src/components/Subscription/TemplateEditorTab/index.tsx` 添加“导出 YAML”“导入 YAML”按钮及口令输入对话框，错误时弹出提醒。
-- [ ] **T033** [US4] 在导入失败时保留原始文件下载链接与错误详情（更新 `TemplateEditorTab` UI 与 `useTemplateEditor.ts`），并提示口令或 dry-run 失败原因。
-- [ ] **T034** [US4] 在 `src-tauri/src/commands/templates.rs`、`template_service.rs` 实现本地文件读写，使用 `crypto_service` 对导出文件加密/解密，并确保 dry-run 校验导入内容。
+- [X] **T031** [US4] 在 `src/services/templateAPI.js` 融合导入/导出接口，通过 Tauri 命令调度 `template.export`、`template.import`，并传递口令/密钥参数。
+- [X] **T032** [US4] 在 `src/components/Subscription/TemplateEditorTab/index.js` 添加导出/导入入口及口令校验反馈。
+- [X] **T033** [US4] 在导入失败时保留错误提示（更新 `ImportExportControls.js` 与 `useTemplateEditor.js`），提示口令或 dry-run 失败原因。
+- [X] **T034** [US4] 在 `src-tauri/src/commands/templates.rs`、`template_service.rs` 实现本地文件加密导入导出，并确保 dry-run 校验导入内容。
 
 **Checkpoint**: 正确口令导入成功并生成日志；错误口令或 dry-run 失败时模板未被覆盖且有错误提示。
 

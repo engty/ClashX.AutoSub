@@ -1,12 +1,11 @@
 import {
   getDiffPaths,
   getTemplateState,
-  exportTemplate,
-  importTemplate,
 } from "../../../hooks/useTemplateEditor.js";
 import { createDiffViewer } from "./DiffViewer.js";
 import { createConflictDialog } from "./ConflictDialog.js";
 import { createSnapshotBanner } from "./SnapshotBanner.js";
+import { createImportExportControls } from "./ImportExportControls.js";
 
 export function createTemplateEditorTab() {
   const state = getTemplateState();
@@ -14,6 +13,7 @@ export function createTemplateEditorTab() {
   const diffViewer = createDiffViewer(state.templateYaml, diffPaths);
   const conflictDialog = createConflictDialog(diffViewer.paths.length > 0);
   const snapshots = createSnapshotBanner();
+  const controls = createImportExportControls();
 
   const sections = ["providers", "rules", "diff"];
   if (state.hasAdvancedPermission) {
@@ -27,10 +27,10 @@ export function createTemplateEditorTab() {
     hasAdvancedPermission: state.hasAdvancedPermission,
     snapshots,
     async export(password) {
-      return exportTemplate(password);
+      return controls.exportTemplate(password);
     },
     async importData(password, encrypted) {
-      await importTemplate(password, encrypted);
+      await controls.importTemplate(password, encrypted);
       return getTemplateState();
     },
   };

@@ -2,6 +2,7 @@ import { runTemplateEditorTabTests } from "../src/components/Subscription/Templa
 import { runUseTemplateEditorFusionTests } from "../src/hooks/__tests__/useTemplateEditor.test.js";
 import { runIntegrationTests } from "./integration/template_editor_integration_test.js";
 import { runUiTests } from "./ui/template-editor.spec.js";
+import { runExportImportFailureTests } from "./import/export_import_failure.test.js";
 
 async function main() {
   const results = [];
@@ -35,6 +36,14 @@ async function main() {
     results.push("UI 测试通过");
   } catch (err) {
     console.error("UI 测试失败:", err);
+    process.exitCode = 1;
+  }
+
+  try {
+    await runExportImportFailureTests();
+    results.push("导入导出失败用例通过");
+  } catch (err) {
+    console.error("导入导出失败用例未通过:", err);
     process.exitCode = 1;
   }
 

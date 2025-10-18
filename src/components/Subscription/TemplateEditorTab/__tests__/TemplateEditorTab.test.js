@@ -2,11 +2,16 @@ import assert from "node:assert";
 import { createTemplateEditorTab } from "../index.js";
 import { createFilterAssistant } from "../FilterAssistant.js";
 import { createCustomConfigInput } from "../CustomConfigInput.js";
-import { resetTemplateEditor, setAdvancedPermission } from "../../../../hooks/useTemplateEditor.js";
+import {
+  resetTemplateEditor,
+  setAdvancedPermission,
+} from "../../../../hooks/useTemplateEditor.js";
+import { getOperations, resetOperations } from "../../../../state/templateOperations.js";
 
 export function runTemplateEditorTabTests() {
   resetTemplateEditor();
   setAdvancedPermission(true);
+  resetOperations();
 
   const view = createTemplateEditorTab();
   assert.ok(view.sections.includes("providers"));
@@ -23,5 +28,14 @@ export function runTemplateEditorTabTests() {
       assert.strictEqual(assistant.mode, "keyword");
       assistant.setMode("regex");
       assert.strictEqual(assistant.mode, "regex");
+    })
+    .then(async () => {
+      resetTemplateEditor();
+      resetOperations();
+      const fullView = createTemplateEditorTab();
+      const exported = await fullView.export("pass123");
+      assert.match(exported, /^[A-Za-z0-9+/=]+$/);
+      await fullView.importData("pass123", exported);
+      assert.ok(getOperations().includes("import:pass123"));
     });
 }
