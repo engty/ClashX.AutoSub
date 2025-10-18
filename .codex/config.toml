@@ -1,0 +1,24 @@
+disable_response_storage = true
+model = "gpt-5-codex"
+model_provider = "packycode"
+model_reasoning_effort = "high"
+
+[mcp_servers.chrome-devtools]
+args = ["chrome-devtools-mcp@latest"]
+command = "npx"
+type = "stdio"
+
+[mcp_servers.sequential-thinking]
+args = ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+command = "npx"
+type = "stdio"
+
+[mcp_servers.serena]
+args = ["--from", "git+https://github.com/oraios/serena", "serena-mcp-server", "--context", "ide-assistant", "--enable-web-dashboard", "False"]
+command = "uvx"
+type = "stdio"
+
+[model_providers.packycode]
+base_url = "https://codex-api.packycode.com/v1"
+name = "packycode"
+wire_api = "responses"
