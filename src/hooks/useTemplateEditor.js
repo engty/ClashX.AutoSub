@@ -1,6 +1,12 @@
 import { updateProviderLink } from "../services/subscriptionAPI.js";
 import { saveTemplateSnapshot, validateTemplateYaml } from "../services/templateAPI.js";
 import { recordOperation, resetOperations } from "../state/templateOperations.js";
+import {
+  storeFusionResult,
+  getFusionResults,
+  removeFusionResult,
+  resetFusionResults,
+} from "../state/fusionStore.js";
 import { cloneTemplate, stringifyTemplate, parseTemplate } from "../utils/templateSerializer.js";
 
 const DEFAULT_TEMPLATE = {
@@ -15,6 +21,7 @@ const DEFAULT_TEMPLATE = {
       type: "http",
     },
   },
+  "proxy-groups": [],
   rules: ["MATCH,providerA"],
 };
 
@@ -27,6 +34,7 @@ const state = {
 export function resetTemplateEditor() {
   state.template = cloneTemplate(DEFAULT_TEMPLATE);
   state.diffPaths = [];
+  resetFusionResults();
   resetOperations();
 }
 
@@ -84,4 +92,42 @@ export async function applyCustomYaml(serialized) {
   await validateTemplateYaml(serialized);
   state.template = parseTemplate(serialized);
   state.diffPaths = [];
+}
+
+export function getFusionHistory() {
+  return getFusionResults().map((entry) => ({
+    region: entry.region,
+    best: entry.best ? { ...entry.best } : undefined,
+    metrics: entry.metrics.map((m) => ({ ...m })),
+  }));
+}
+
+export async function recordFusionMetrics(region, metrics) {
+  if (!Array.isArray(metrics) || metrics.length === 0) {
+    throw new Error("缺少融合测试结果");
+  }
+
+  const sorted = [...metrics].sort((a, b) => a.latency - b.latency);
+  const best = sorted[0];
+  const snapshot = cloneTemplate(state.template);
+
+  state.template.rules = [`AUTO ${region} -> ${best.node}`];
+  state.diffPaths = [`fusion.${region}`];
+  storeFusionResult({
+    region,
+    metrics: sorted,
+    best,
+    snapshot,
+  });
+  recordOperation(`fusion:${region}:${best.node}`);
+}
+
+export function rollbackFusion(region) {
+  const entry = removeFusionResult(region);
+  if (!entry) {
+    return;
+  }
+  state.template = cloneTemplate(entry.snapshot);
+  state.diffPaths = [];
+  recordOperation(`fusion-rollback:${region}`);
 }

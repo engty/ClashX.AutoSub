@@ -1,7 +1,12 @@
+use crate::models::template::{
+    FusionMetric, FusionStatus, FusionTestResult, TemplateSnapshot,
+};
 use crate::services::audit_log_service;
+use once_cell::sync::Lazy;
 use serde_json::Value;
 use serde_yaml;
 use std::collections::BTreeMap;
+use std::sync::Mutex;
 use thiserror::Error;
 use uuid::Uuid;
 
@@ -20,7 +25,11 @@ pub enum TemplateError {
     ParseError(#[from] serde_yaml::Error),
     #[error("订阅源 `{0}` 缺少 url 字段")]
     ProviderMissingUrl(String),
+    #[error("融合测试数据为空")]
+    EmptyFusionMetrics,
 }
+
+static FUSION_RESULTS: Lazy<Mutex<Vec<FusionTestResult>>> = Lazy::new(|| Mutex::new(Vec::new()));
 
 pub fn replace_subscription_links(
     template_yaml: &str,
@@ -64,9 +73,9 @@ pub fn perform_dry_run(template_yaml: &str) -> Result<(), TemplateError> {
     Ok(())
 }
 
-pub fn persist_snapshot(update: &TemplateUpdate) -> crate::models::template::TemplateSnapshot {
+pub fn persist_snapshot(update: &TemplateUpdate) -> TemplateSnapshot {
     audit_log_service::append_entry();
-    crate::models::template::TemplateSnapshot {
+    TemplateSnapshot {
         id: update.snapshot_id.clone(),
         diff_paths: update.changed_paths.clone(),
     }
@@ -111,4 +120,49 @@ fn compute_diff_recursive(
             diff.insert(path.to_string(), updated.clone());
         }
     }
+}
+
+pub fn record_fusion_metrics(
+    region: &str,
+    metrics: Vec<FusionMetric>,
+) -> Result<FusionTestResult, TemplateError> {
+    if metrics.is_empty() {
+        return Err(TemplateError::EmptyFusionMetrics);
+    }
+
+    let mut sorted = metrics;
+    sorted.sort_by_key(|metric| metric.latency);
+    let best = sorted
+        .iter()
+        .find(|metric| matches!(metric.status, FusionStatus::Success))
+        .cloned();
+
+    let result = FusionTestResult {
+        region: region.to_string(),
+        metrics: sorted.clone(),
+        best,
+    };
+
+    if let Ok(mut history) = FUSION_RESULTS.lock() {
+        history.push(result.clone());
+    }
+
+    audit_log_service::append_entry();
+    Ok(result)
+}
+
+pub fn get_fusion_results() -> Vec<FusionTestResult> {
+    FUSION_RESULTS
+        .lock()
+        .map(|history| history.clone())
+        .unwrap_or_default()
+}
+
+pub fn rollback_fusion(region: &str) -> Option<FusionTestResult> {
+    if let Ok(mut history) = FUSION_RESULTS.lock() {
+        if let Some(index) = history.iter().rposition(|entry| entry.region == region) {
+            return Some(history.remove(index));
+        }
+    }
+    None
 }

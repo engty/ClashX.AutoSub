@@ -12,6 +12,7 @@ export function runTemplateEditorTabTests() {
   assert.ok(view.sections.includes("providers"));
   assert.ok(view.sections.includes("diff"));
   assert.deepStrictEqual(view.diffPaths, []);
+  assert.deepStrictEqual(view.snapshots, []);
 
   setAdvancedPermission(false);
   const input = createCustomConfigInput({ hasAdvancedPermission: false });

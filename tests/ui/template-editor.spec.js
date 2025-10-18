@@ -9,6 +9,6 @@ export async function runUiTests() {
     "update:providerA:https://example.com/new",
     "snapshot:providerA",
     "diff:providerA",
-    "template:268",
+    "template:290",
   ]);
 }

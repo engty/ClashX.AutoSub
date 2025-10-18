@@ -1,5 +1,8 @@
-import { fetchAuditLog } from "../services/auditLog.js";
+import { getFusionHistoryFromApi, getTemplateLogs } from "../services/templateAPI.js";
 
 export async function useSnapshots() {
-  return fetchAuditLog();
+  return {
+    logs: await getTemplateLogs(),
+    fusion: await getFusionHistoryFromApi(),
+  };
 }

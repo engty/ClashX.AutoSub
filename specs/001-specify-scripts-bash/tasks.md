@@ -82,15 +82,15 @@ description: "Task list template for feature implementation"
 **Independent Test**: 配置两个地区订阅源后触发融合，UI 展示排序与失败记录；可回滚到先前快照。
 
 ### Tests (must fail first)
-- [ ] **T021** [US3] 在 `src/hooks/__tests__/useTemplateEditor.test.ts` 添加失败单测，断言融合结果写入 `FusionTestResult` 数据并可回滚。
-- [ ] **T022** [US3] 在 `src-tauri/tests/integration/fusion_tests.rs` 新建失败集成测试，覆盖 `FusionTestResult` 记录与 dry-run 错误回写。
+- [X] **T021** [US3] 在 `src/hooks/__tests__/useTemplateEditor.test.js` 添加单测，断言融合结果写入 `FusionTestResult` 数据并可回滚。
+- [X] **T022** [US3] 在 `src-tauri/tests/integration/fusion_tests.rs` 编写集成测试，覆盖 `FusionTestResult` 记录与 dry-run 错误回写。
 
 ### Implementation
-- [ ] **T023** [P] [US3] 扩展 `src-tauri/src/services/subscription_service.rs`、`src-tauri/src/services/template_service.rs` 记录融合延迟、失败原因，并更新 `FusionTestResult` 结构。
-- [ ] **T024** [P] [US3] 更新 `src/components/Subscription/TemplateEditorTab/SnapshotBanner.tsx`，展示地区延迟、最佳节点与回滚入口。
-- [ ] **T025** [US3] 扩展 `useTemplateEditor.ts` & `useSnapshots.ts`，拉取融合结果、允许用户选取历史节点。
-- [ ] **T026** [US3] 在前端服务 `templateAPI.ts` 新增 `getSnapshots`/`getLogs` 调用，配合 UI 刷新。
-- [ ] **T027** [US3] 运行并修复 T021、T022 测试确保通过。
+- [X] **T023** [P] [US3] 扩展 `src-tauri/src/services/subscription_service.rs`、`src-tauri/src/services/template_service.rs` 记录融合延迟、失败原因，并更新 `FusionTestResult` 结构。
+- [X] **T024** [P] [US3] 更新 `src/components/Subscription/TemplateEditorTab/SnapshotBanner.js`，展示地区延迟、最佳节点与回滚入口。
+- [X] **T025** [US3] 扩展 `useTemplateEditor.js` & `useSnapshots.js`，拉取融合结果、允许用户选取历史节点。
+- [X] **T026** [US3] 在前端服务 `templateAPI.js` 新增 `getFusionHistoryFromApi`/`getTemplateLogs` 调用，配合 UI 刷新。
+- [X] **T027** [US3] 运行并修复 T021、T022 测试确保通过。
 
 **Checkpoint**: 多订阅融合流程在 UI 中可视化，历史记录与回滚可用。
 

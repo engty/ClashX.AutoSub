@@ -1,3 +1,4 @@
+use crate::models::template::{FusionMetric, FusionTestResult};
 use crate::services::{
     audit_log_service,
     subscription_service,
@@ -19,4 +20,19 @@ pub fn save_snapshot(
 
 pub fn get_logs() -> Vec<String> {
     audit_log_service::fetch_entries()
+}
+
+pub fn record_fusion(
+    region: &str,
+    metrics: Vec<FusionMetric>,
+) -> Result<FusionTestResult, TemplateError> {
+    template_service::record_fusion_metrics(region, metrics)
+}
+
+pub fn fusion_history() -> Vec<FusionTestResult> {
+    template_service::get_fusion_results()
+}
+
+pub fn rollback_fusion(region: &str) -> Option<FusionTestResult> {
+    template_service::rollback_fusion(region)
 }

@@ -9,6 +9,6 @@ export async function runIntegrationTests() {
     "update:providerA:https://new.example.com",
     "snapshot:providerA",
     "diff:providerA",
-    "template:268",
+    "template:290",
   ]);
 }
