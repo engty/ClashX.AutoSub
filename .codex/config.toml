@@ -1,7 +1,6 @@
-disable_response_storage = true
 model = "gpt-5-codex"
-model_provider = "packycode"
 model_reasoning_effort = "high"
+
 
 [mcp_servers.chrome-devtools]
 args = ["chrome-devtools-mcp@latest"]
@@ -22,3 +21,6 @@ type = "stdio"
 base_url = "https://codex-api.packycode.com/v1"
 name = "packycode"
 wire_api = "responses"
+
+[projects."/Users/engtyleong/Projects/ClashX.AutoSub"]
+trust_level = "trusted"

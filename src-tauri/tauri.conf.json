@@ -1,0 +1,30 @@
+{
+  "package": {
+    "productName": "ClashX AutoSub",
+    "version": "0.1.0"
+  },
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devPath": "http://localhost:5173",
+    "beforeBuildCommand": "npm run build",
+    "distDir": "../dist",
+    "withGlobalTauri": false
+  },
+  "tauri": {
+    "bundle": {
+      "identifier": "com.clashx.autosub"
+    },
+    "windows": [
+      {
+        "label": "main",
+        "title": "ClashX AutoSub",
+        "width": 1280,
+        "height": 800,
+        "resizable": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  }
+}
