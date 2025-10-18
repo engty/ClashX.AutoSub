@@ -4,10 +4,19 @@ export interface AuditLogEntry {
   readonly createdAt: string;
 }
 
-export async function fetchAuditLog(): Promise<never> {
-  throw new Error("TODO: bridge to template.get_logs Tauri command");
+const entries: AuditLogEntry[] = [];
+
+export async function fetchAuditLog(): Promise<readonly AuditLogEntry[]> {
+  return [...entries];
 }
 
-export async function appendAuditLog(_entry: AuditLogEntry): Promise<never> {
-  throw new Error("TODO: log template editor activity");
+export async function appendAuditLog(entry: AuditLogEntry): Promise<void> {
+  entries.unshift(entry);
+  if (entries.length > 10) {
+    entries.length = 10;
+  }
+}
+
+export function resetAuditLog(): void {
+  entries.length = 0;
 }

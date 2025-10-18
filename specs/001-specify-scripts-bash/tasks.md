@@ -61,16 +61,16 @@ description: "Task list template for feature implementation"
 **Independent Test**: 通过 UI 新增策略组并保存，diff 与 dry-run 成功；自定义 YAML 错误时提示未加载。
 
 ### Tests (must fail first)
-- [ ] **T013** [US2] 在 `src/components/Subscription/TemplateEditorTab/__tests__/TemplateEditorTab.test.tsx` 编写失败测试，断言页签渲染、权限控制、受保护模块不可删除（需提示）以及 diff 展示。
-- [ ] **T014** [US2] 在 `tests/ui/template-editor.spec.ts` 编写 WebDriver 失败用例，覆盖自定义 YAML 错误提示与冲突重载流程。
+- [X] **T013** [US2] 在 `src/components/Subscription/TemplateEditorTab/__tests__/TemplateEditorTab.test.ts` 编写失败测试，断言页签渲染、权限控制、受保护模块不可删除（需提示）以及 diff 展示。
+- [X] **T014** [US2] 在 `tests/ui/template-editor.spec.ts` 编写 WebDriver 失败用例，覆盖自定义 YAML 错误提示与冲突重载流程。
 
 ### Implementation
-- [ ] **T015** [P] [US2] 实现 `src/components/Subscription/TemplateEditorTab/index.tsx` 布局、表单、DiffViewer、冲突对话框整合。
-- [ ] **T016** [P] [US2] 实现 `src/components/Subscription/TemplateEditorTab/FilterAssistant.tsx`（标签 + 正则模式切换）与 `CustomConfigInput.tsx`（格式化 & 权限控制），并为受保护模块提供只读标识与删除前二次确认。
-- [ ] **T017** [P] [US2] 实现/更新 `src/hooks/useTemplateEditor.ts`、`src/hooks/useYamlValidation.ts`、`src/hooks/useSnapshots.ts`，处理 schema 校验、dry-run、冲突刷新、回滚操作。
-- [ ] **T018** [US2] 在 `src/components/Subscription/SubscriptionManager.tsx` 注册新页签、权限守卫与 `DiffViewer` 组件；在受保护模块上接入只读/确认逻辑；更新样式 `template-editor.css`。
-- [ ] **T019** [US2] 更新 `src/services/auditLog.ts` 展示最近 10 条日志；在 UI 加入提示 Banner。
-- [ ] **T020** [US2] 运行并修复 T013、T014 测试确保通过。
+- [X] **T015** [P] [US2] 实现 `src/components/Subscription/TemplateEditorTab/index.tsx` 布局、表单、DiffViewer、冲突对话框整合。
+- [X] **T016** [P] [US2] 实现 `src/components/Subscription/TemplateEditorTab/FilterAssistant.tsx`（标签 + 正则模式切换）与 `CustomConfigInput.tsx`（格式化 & 权限控制），并为受保护模块提供只读标识与删除前二次确认。
+- [X] **T017** [P] [US2] 实现/更新 `src/hooks/useTemplateEditor.ts`、`src/hooks/useYamlValidation.ts`、`src/hooks/useSnapshots.ts`，处理 schema 校验、dry-run、冲突刷新、回滚操作。
+- [X] **T018** [US2] 在 `src/components/Subscription/SubscriptionManager.tsx` 注册新页签、权限守卫与 `DiffViewer` 组件；在受保护模块上接入只读/确认逻辑；更新样式 `template-editor.css`。
+- [X] **T019** [US2] 更新 `src/services/auditLog.ts` 展示最近 10 条日志；在 UI 加入提示 Banner。
+- [X] **T020** [US2] 运行并修复 T013、T014 测试确保通过。
 
 **Checkpoint**: 模板编辑页签完整可用；Vitest & UI 自动化通过。
 
