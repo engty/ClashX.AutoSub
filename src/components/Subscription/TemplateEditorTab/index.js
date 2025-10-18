@@ -1,16 +1,8 @@
-import YAML from "yaml";
-import { getDiffPaths, getTemplateState } from "../../../hooks/useTemplateEditor";
-import { createDiffViewer } from "./DiffViewer";
-import { createConflictDialog } from "./ConflictDialog";
+import { getDiffPaths, getTemplateState } from "../../../hooks/useTemplateEditor.js";
+import { createDiffViewer } from "./DiffViewer.js";
+import { createConflictDialog } from "./ConflictDialog.js";
 
-export interface TemplateEditorTabView {
-  readonly sections: string[];
-  readonly diffPaths: string[];
-  readonly conflicts: string[];
-  readonly hasAdvancedPermission: boolean;
-}
-
-export function createTemplateEditorTab(): TemplateEditorTabView {
+export function createTemplateEditorTab() {
   const state = getTemplateState();
   const diffPaths = getDiffPaths();
   const diffViewer = createDiffViewer(state.templateYaml, diffPaths);
@@ -20,8 +12,6 @@ export function createTemplateEditorTab(): TemplateEditorTabView {
   if (state.hasAdvancedPermission) {
     sections.push("custom-yaml");
   }
-
-  YAML.parse(state.templateYaml);
 
   return {
     sections,

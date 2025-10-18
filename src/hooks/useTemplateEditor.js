@@ -1,0 +1,87 @@
+import { updateProviderLink } from "../services/subscriptionAPI.js";
+import { saveTemplateSnapshot, validateTemplateYaml } from "../services/templateAPI.js";
+import { recordOperation, resetOperations } from "../state/templateOperations.js";
+import { cloneTemplate, stringifyTemplate, parseTemplate } from "../utils/templateSerializer.js";
+
+const DEFAULT_TEMPLATE = {
+  "proxy-providers": {
+    providerA: {
+      url: "https://old.example.com",
+      type: "http",
+      interval: 3600,
+    },
+    providerB: {
+      url: "https://stay.example.com",
+      type: "http",
+    },
+  },
+  rules: ["MATCH,providerA"],
+};
+
+const state = {
+  template: cloneTemplate(DEFAULT_TEMPLATE),
+  diffPaths: [],
+  hasAdvancedPermission: true,
+};
+
+export function resetTemplateEditor() {
+  state.template = cloneTemplate(DEFAULT_TEMPLATE);
+  state.diffPaths = [];
+  resetOperations();
+}
+
+export function setAdvancedPermission(enabled) {
+  state.hasAdvancedPermission = Boolean(enabled);
+}
+
+export function getTemplateYaml() {
+  return stringifyTemplate(state.template);
+}
+
+export function getDiffPaths() {
+  return [...state.diffPaths];
+}
+
+export async function replaceLinks(providerId, url) {
+  const templateYaml = getTemplateYaml();
+  await updateProviderLink({ providerId, newUrl: url });
+  await saveTemplateSnapshot({ snapshotName: providerId });
+
+  const provider = state.template["proxy-providers"][providerId];
+  if (!provider) {
+    throw new Error(`订阅源 ${providerId} 不存在`);
+  }
+
+  if (provider.url !== url) {
+    provider.url = url;
+    state.diffPaths = [`proxy-providers.${providerId}.url`];
+    recordOperation(`diff:${providerId}`);
+  }
+
+  // 记录原始 YAML，仅用于对比。
+  recordOperation(`template:${templateYaml.length}`);
+}
+
+export function getTemplateState() {
+  return {
+    providers: Object.entries(state.template["proxy-providers"]).map(([name, info]) => ({
+      name,
+      url: info.url,
+      type: info.type,
+      interval: info.interval,
+    })),
+    rules: [...state.template.rules],
+    hasAdvancedPermission: state.hasAdvancedPermission,
+    diffPaths: getDiffPaths(),
+    templateYaml: getTemplateYaml(),
+  };
+}
+
+export async function applyCustomYaml(serialized) {
+  if (!state.hasAdvancedPermission) {
+    throw new Error("暂无权限编辑自定义 YAML");
+  }
+  await validateTemplateYaml(serialized);
+  state.template = parseTemplate(serialized);
+  state.diffPaths = [];
+}

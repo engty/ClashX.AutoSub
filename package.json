@@ -6,9 +6,6 @@
   "scripts": {
     "dev": "echo \"TODO: configure dev server\"",
     "build": "echo \"TODO: configure build step\"",
-    "test": "echo \"TODO: configure tests\""
-  },
-  "dependencies": {
-    "yaml": "^2.4.5"
+    "test": "node tests/run-tests.js"
   }
 }

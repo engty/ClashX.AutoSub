@@ -5,9 +5,7 @@ export const templateSchema = {
   properties: {
     "proxy-providers": { type: "object" },
     "proxy-groups": { type: "array" },
-    rules: { type: "array" }
+    rules: { type: "array" },
   },
-  additionalProperties: true
-} as const;
-
-export type TemplateSchema = typeof templateSchema;
+  additionalProperties: true,
+};

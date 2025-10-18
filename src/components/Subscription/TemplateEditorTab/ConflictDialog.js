@@ -1,9 +1,4 @@
-export interface ConflictDialogView {
-  readonly messages: string[];
-  readonly hasConflict: boolean;
-}
-
-export function createConflictDialog(hasConflict: boolean): ConflictDialogView {
+export function createConflictDialog(hasConflict) {
   if (!hasConflict) {
     return { messages: [], hasConflict: false };
   }
