@@ -10,7 +10,7 @@ export function fetchLinkExpiry(providerId) {
     return linkExpiryOverrides.get(providerId);
   }
   recordOperation(`expiry:${providerId}`);
-  return 300;
+  return null;
 }
 
 const linkExpiryOverrides = new Map();

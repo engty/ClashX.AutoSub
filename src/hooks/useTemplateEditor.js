@@ -82,6 +82,8 @@ export function getTemplateState() {
       url: info.url,
       type: info.type,
       interval: info.interval,
+      expirySeconds: info["link-expiry-seconds"] ?? info.linkExpirySeconds ?? info.expirySeconds ?? null,
+      expiryPolicy: info["link-expiry"] ?? info.linkExpiry ?? null,
     })),
     rules: [...state.template.rules],
     hasAdvancedPermission: state.hasAdvancedPermission,
