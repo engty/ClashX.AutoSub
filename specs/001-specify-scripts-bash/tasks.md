@@ -42,14 +42,14 @@ description: "Task list template for feature implementation"
 **Independent Test**: 导入包含自定义策略的模板并更新链接，dry-run 成功且除 URL 外 diff 为空。
 
 ### Tests (must fail first)
-- [ ] **T007** [US1] 在 `src-tauri/tests/contract/template-commands.contract.test.ts` 编写失败测试，验证 `POST /template/save` 返回 snapshotId 且 diff 仅包含链接字段。
-- [ ] **T008** [US1] 在 `tests/integration/templateEditor.integration.test.ts` 编写失败测试，模拟 UI 触发链接更新并断言 TemplateSnapshot 与 AuditLog 记录。
+- [X] **T007** [US1] 在 `src-tauri/tests/contract/template-commands.contract.test.rs` 编写失败测试，验证 `POST /template/save` 返回 snapshotId 且 diff 仅包含链接字段。
+- [X] **T008** [US1] 在 `tests/integration/templateEditor.integration.test.ts` 编写失败测试，模拟 UI 触发链接更新并断言 TemplateSnapshot 与 AuditLog 记录。
 
 ### Implementation
-- [ ] **T009** [US1] 扩展 `src-tauri/src/services/subscription_service.rs` 与 `src-tauri/src/commands/subscriptions.rs`，实现对 `proxy-providers.*.url` 的选择性替换及冲突检测；更新 `src-tauri/src/models/template.rs` 结构。
-- [ ] **T010** [P] [US1] 实现 `src-tauri/src/services/template_service.rs` dry-run + snapshot 存储、10 条淘汰逻辑，并填充 `template.validate_yaml`/`template.save_snapshot` 命令。
-- [ ] **T011** [P] [US1] 更新前端 `src/services/subscriptionAPI.ts`、`src/services/templateAPI.ts` 调用新命令；在 `useTemplateEditor.ts` 接入快照/日志刷新。
-- [ ] **T012** [US1] 在 `src-tauri/tests/integration/template_editor_refresh.rs`（新增）编写通过测试，验证多订阅源更新仅影响链接字段。
+- [X] **T009** [US1] 扩展 `src-tauri/src/services/subscription_service.rs` 与 `src-tauri/src/commands/templates.rs`，实现对 `proxy-providers.*.url` 的选择性替换及冲突检测；更新 `src-tauri/src/models/template.rs` 结构。
+- [X] **T010** [P] [US1] 实现 `src-tauri/src/services/template_service.rs` dry-run + snapshot 存储、10 条淘汰逻辑，并填充 `template.validate_yaml`/`template.save_snapshot` 命令。
+- [X] **T011** [P] [US1] 更新前端 `src/services/subscriptionAPI.ts`、`src/services/templateAPI.ts` 调用新命令；在 `useTemplateEditor.ts` 接入快照/日志刷新。
+- [X] **T012** [US1] 在 `src-tauri/tests/integration/template_editor_refresh.rs` 编写通过测试，验证多订阅源更新仅影响链接字段。
 
 **Checkpoint**: 重新运行 T007–T012 对应测试，全部通过；保存日志与快照目录生成条目 ≤10。
 

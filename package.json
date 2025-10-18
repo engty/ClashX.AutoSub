@@ -1,0 +1,14 @@
+{
+  "name": "clashx-autosub",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "echo \"TODO: configure dev server\"",
+    "build": "echo \"TODO: configure build step\"",
+    "test": "echo \"TODO: configure tests\""
+  },
+  "dependencies": {
+    "yaml": "^2.4.5"
+  }
+}
