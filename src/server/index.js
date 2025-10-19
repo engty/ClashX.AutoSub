@@ -18,9 +18,10 @@ app.get("/api/health", (_req, res) => {
 app.get("/api/providers", async (_req, res) => {
   try {
     const snapshot = await loadConfiguration();
-    const providers = Object.entries(snapshot.document["proxy-providers"] || {}).map(
+    const baseProviders = Object.entries(snapshot.document["proxy-providers"] || {}).map(
       ([name, info]) => toProviderPayload(name, info)
     );
+    const providers = await enrichProvidersWithHealth(baseProviders);
     res.json({
       source: snapshot.source,
       providers,
@@ -66,7 +67,8 @@ app.post("/api/providers/:providerId/link", async (req, res) => {
     await ensureUserConfigDirectory();
     await fs.writeFile(USER_CONFIG_PATH, YAML.stringify(snapshot.document), "utf8");
 
-    const refreshed = toProviderPayload(providerId, providers[providerId]);
+    const refreshedBase = toProviderPayload(providerId, providers[providerId]);
+    const [refreshed] = await enrichProvidersWithHealth([refreshedBase]);
     res.json({ provider: refreshed });
   } catch (err) {
     console.error(err);
@@ -199,4 +201,86 @@ function computeHighlight(seconds) {
     return "warning";
   }
   return null;
+}
+
+const SKIP_SUBSCRIPTION_CHECK = process.env.SKIP_SUBSCRIPTION_CHECK === "1";
+const SUBSCRIPTION_CHECK_TIMEOUT = Number(process.env.SUBSCRIPTION_CHECK_TIMEOUT ?? 5000);
+const SUBSCRIPTION_KEYWORD_PATTERN =
+  /(proxies\s*:|proxy-groups\s*:|proxy-providers\s*:|^https?:\/\/|^(ss|ssr|vmess|vless|trojan|socks5|tuic|wireguard):)/im;
+
+async function enrichProvidersWithHealth(providers) {
+  if (providers.length === 0) {
+    return providers;
+  }
+  if (SKIP_SUBSCRIPTION_CHECK) {
+    return providers.map((provider) => ({ ...provider, isValid: null }));
+  }
+  const results = await Promise.allSettled(
+    providers.map((provider) => detectSubscriptionHealth(provider.url))
+  );
+  return providers.map((provider, index) => ({
+    ...provider,
+    isValid: results[index].status === "fulfilled" ? results[index].value === true : false,
+  }));
+}
+
+async function detectSubscriptionHealth(url) {
+  if (!url) {
+    return false;
+  }
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), SUBSCRIPTION_CHECK_TIMEOUT);
+  try {
+    const response = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        "User-Agent": "ClashX.AutoSub/1.0",
+        Accept: "application/octet-stream, text/plain, application/yaml, */*",
+      },
+    });
+    if (!response.ok) {
+      return false;
+    }
+    const text = await response.text();
+    return isSubscriptionPayload(text);
+  } catch (err) {
+    console.warn(`校验订阅链接失败 (${url}):`, err?.message ?? err);
+    return false;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function isSubscriptionPayload(raw) {
+  const trimmed = raw.trim();
+  if (!trimmed) {
+    return false;
+  }
+  if (looksLikeClashContent(trimmed)) {
+    return true;
+  }
+  if (looksLikeBase64(trimmed)) {
+    try {
+      const decoded = Buffer.from(trimmed.replace(/\s+/g, ""), "base64").toString("utf8");
+      return looksLikeClashContent(decoded);
+    } catch (err) {
+      return false;
+    }
+  }
+  return false;
+}
+
+function looksLikeClashContent(text) {
+  return SUBSCRIPTION_KEYWORD_PATTERN.test(text);
+}
+
+function looksLikeBase64(text) {
+  const compact = text.replace(/[\r\n\s]+/g, "");
+  if (!compact || compact.length < 16 || compact.length % 4 !== 0) {
+    return false;
+  }
+  if (!/^[A-Za-z0-9+/=]+$/.test(compact)) {
+    return false;
+  }
+  return true;
 }

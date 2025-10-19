@@ -24,6 +24,8 @@ export default function ProviderCard({ provider, onUpdate }) {
   }, [provider.id, provider.url, provider.expirySeconds]);
 
   const highlightLabel = provider.highlight ? HIGHLIGHT_LABEL[provider.highlight] : "";
+  const statusClass =
+    provider.isValid === false ? "tag-invalid" : provider.isValid === true ? "tag-valid" : "tag-neutral";
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -60,7 +62,7 @@ export default function ProviderCard({ provider, onUpdate }) {
       >
         <div className="card-heading">
           <h2>{provider.name}</h2>
-          <span className="tag">{provider.type || "http"}</span>
+          <span className={`tag ${statusClass}`}>{provider.type || "http"}</span>
         </div>
         <div className="card-meta">
           {highlightLabel && <span className="tag danger-tag">{highlightLabel}</span>}
@@ -82,7 +84,7 @@ export default function ProviderCard({ provider, onUpdate }) {
               className="new-link-input"
             />
           </label>
-          <label className="expiry-row">
+          <div className="expiry-row">
             <div className="expiry-inputs">
               <input
                 type="number"
@@ -99,9 +101,10 @@ export default function ProviderCard({ provider, onUpdate }) {
                   checked={longTerm}
                   onChange={(event) => setLongTerm(event.target.checked)}
                 />
-              </label>长期有效
+                <span className="checkbox-label">长期有效</span>
+              </label>
             </div>
-          </label>
+          </div>
           <div className="form-actions">
             <button type="submit" disabled={saving}>
               {saving ? "保存中..." : "保存"}
