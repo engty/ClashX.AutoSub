@@ -57,9 +57,9 @@ app.post("/api/providers/:providerId/link", async (req, res) => {
       } else {
         const numeric = Number(expirySeconds);
         if (!Number.isFinite(numeric) || numeric <= 0) {
-          return res.status(400).json({ error: "有效期必须为正整数" });
+          return res.status(400).json({ error: "有效期必须为正整数分钟" });
         }
-        providers[providerId]["link-expiry-seconds"] = Math.floor(numeric);
+        providers[providerId]["link-expiry-seconds"] = Math.floor(numeric * 60);
         delete providers[providerId]["link-expiry"];
       }
     }
@@ -123,6 +123,7 @@ function toProviderPayload(name, info) {
     url: info.url || "",
     interval: info.interval ?? null,
     expirySeconds: resolvedExpiry.seconds,
+    expiryMinutes: resolvedExpiry.minutes,
     expiryDisplay: resolvedExpiry.display,
     highlight: resolvedExpiry.highlight,
   };
@@ -148,7 +149,7 @@ function resolveExpiry(provider) {
     return parsedInterval;
   }
 
-  return { seconds: null, display: "遵循默认策略", highlight: null };
+  return { seconds: null, minutes: null, display: "遵循默认策略", highlight: null };
 }
 
 function interpretExpiry(value) {
@@ -162,13 +163,13 @@ function interpretExpiry(value) {
       return undefined;
     }
     if (["never", "none", "no-expiry", "infinite", "永久", "不限"].includes(lowered)) {
-      return { seconds: null, display: "长期有效", highlight: null };
+      return { seconds: null, minutes: null, display: "长期有效", highlight: null };
     }
     const numeric = Number(lowered);
     if (Number.isFinite(numeric)) {
       return normaliseSeconds(numeric);
     }
-    return { seconds: null, display: `策略：${value}`, highlight: null };
+    return { seconds: null, minutes: null, display: `策略：${value}`, highlight: null };
   }
 
   if (typeof value === "number") {
@@ -180,24 +181,30 @@ function interpretExpiry(value) {
 
 function normaliseSeconds(value) {
   if (!Number.isFinite(value) || value <= 0) {
-    return { seconds: null, display: "长期有效", highlight: null };
+    return { seconds: null, minutes: null, display: "长期有效", highlight: null };
   }
   const seconds = Math.floor(value);
+  const minutes = Math.max(1, Math.round(seconds / 60));
+  const display =
+    minutes >= 60
+      ? `${Math.round(minutes / 60)} 小时`
+      : `${minutes} 分钟`;
   return {
     seconds,
-    display: `${seconds} 秒`,
-    highlight: computeHighlight(seconds),
+    minutes,
+    display,
+    highlight: computeHighlightMinutes(minutes),
   };
 }
 
-function computeHighlight(seconds) {
-  if (seconds == null) {
+function computeHighlightMinutes(minutes) {
+  if (minutes == null) {
     return null;
   }
-  if (seconds <= 60) {
+  if (minutes <= 1) {
     return "danger";
   }
-  if (seconds <= 300) {
+  if (minutes <= 5) {
     return "warning";
   }
   return null;

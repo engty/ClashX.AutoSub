@@ -55,7 +55,9 @@ export default function App() {
       setProviders((current) =>
         current.map((item) => (item.id === updated.provider.id ? updated.provider : item))
       );
-      setStatusMessage(`订阅源 ${providerId} 已更新`);
+      setStatusMessage(`订阅源 ${providerId} 已更新，正在重新检测...`);
+      await loadProviders();
+      setStatusMessage(`订阅源 ${providerId} 已更新并完成检测`);
     } catch (err) {
       console.error(err);
       setError(err.message || "更新失败");

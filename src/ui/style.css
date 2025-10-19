@@ -206,8 +206,44 @@ input[type="number"] {
   color: #e6edf3;
 }
 
+.link-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .provider-form .new-link-input {
-  width: 90%;
+  flex: 1;
+  width: auto;
+}
+
+.copy-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: rgba(226, 232, 240, 0.7);
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.copy-button:hover {
+  color: #bfdbfe;
+  transform: translateY(-1px);
+}
+
+.copy-button:active {
+  transform: translateY(0);
+  color: #e0f2fe;
+}
+
+.copy-button:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.7);
+  outline-offset: 2px;
 }
 
 .expiry-row {
@@ -218,6 +254,12 @@ input[type="number"] {
   display: flex;
   gap: 12px;
   align-items: center;
+  justify-content: space-between;
+}
+
+.expiry-inputs input[type="number"] {
+  flex: 1;
+  min-width: 0;
 }
 
 .checkbox {
@@ -226,6 +268,7 @@ input[type="number"] {
   gap: 4px;
   font-weight: 400;
   white-space: nowrap;
+  margin-left: 12px;
 }
 
 .checkbox input[type="checkbox"] {
@@ -246,5 +289,6 @@ input[type="number"] {
 }
 
 .form-message {
+  font-size: 12px;
   color: rgba(148, 187, 233, 0.9);
 }
