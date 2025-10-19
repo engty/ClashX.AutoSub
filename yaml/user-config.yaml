@@ -15,14 +15,6 @@ proxy-providers:
       enable: true
       url: https://www.gstatic.com/generate_204
       interval: 180
-  红心:
-    url: https://114.132.219.239:9888/tgyunsub?token=59c15a5f234e1f4f1cbce73e37da6771
-    type: http
-    interval: 300
-    health-check:
-      enable: true
-      url: https://www.gstatic.com/generate_204
-      interval: 180
 proxies:
   - name: 直连
     type: direct
