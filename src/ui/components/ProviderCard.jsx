@@ -12,11 +12,6 @@ function deriveMinutesInput(source, isNew) {
   return isNew ? "" : String(LONG_TERM_MINUTES);
 }
 
-const HIGHLIGHT_LABEL = {
-  danger: "即将过期 (≤ 1 分钟)",
-  warning: "即将过期 (≤ 5 分钟)",
-};
-
 export default function ProviderCard({ provider, onSave, onDelete, isNew = false }) {
   const [nameInput, setNameInput] = useState(provider.name ?? "");
   const [draftUrl, setDraftUrl] = useState(provider.url ?? "");
@@ -53,11 +48,8 @@ export default function ProviderCard({ provider, onSave, onDelete, isNew = false
     return () => clearTimeout(timer);
   }, [message]);
 
-  const highlightLabel = provider.highlight ? HIGHLIGHT_LABEL[provider.highlight] : "";
-  const statusClass =
-    provider.isValid === false ? "tag-invalid" : provider.isValid === true ? "tag-valid" : "tag-neutral";
-  const statusLabel =
-    provider.isValid === false ? "无效" : provider.isValid === true ? "有效" : "检测中";
+  const statusInfo = deriveLinkStatus(provider);
+  const cardAlertClass = statusInfo.cardClass ? statusInfo.cardClass : "";
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -136,10 +128,23 @@ export default function ProviderCard({ provider, onSave, onDelete, isNew = false
     }
   }
 
+  function handleSurfaceClick(event) {
+    if (!(event.target instanceof Element)) {
+      return;
+    }
+    if (event.target.closest("[data-block-toggle]")) {
+      return;
+    }
+    setIsOpen((value) => !value);
+  }
+
   return (
-    <section className={`provider-card ${provider.highlight ?? ""} ${isOpen ? "open" : "closed"}`}>
-      <div className="card-header">
-        <div className="card-heading">
+    <section
+      className={`provider-card ${cardAlertClass} ${isOpen ? "open" : "closed"}`}
+      onClick={handleSurfaceClick}
+    >
+      <div className="card-header" data-block-toggle>
+        <div className="card-heading" data-block-toggle>
           {isNew ? (
             <input
               type="text"
@@ -152,14 +157,16 @@ export default function ProviderCard({ provider, onSave, onDelete, isNew = false
           ) : (
             <h2>{provider.name}</h2>
           )}
-          <span className={`tag ${statusClass}`}>{statusLabel}</span>
         </div>
-        <div className="card-meta">
-          {highlightLabel && <span className="tag danger-tag">{highlightLabel}</span>}
+        <div className="card-meta" data-block-toggle>
+          <span className={`tag ${statusInfo.tagClass}`}>{statusInfo.label}</span>
           <button
             type="button"
             className="card-toggle"
-            onClick={() => setIsOpen((value) => !value)}
+            onClick={(event) => {
+              event.stopPropagation();
+              setIsOpen((value) => !value);
+            }}
             aria-expanded={isOpen}
             aria-label={isOpen ? "收起" : "展开"}
           >
@@ -170,7 +177,7 @@ export default function ProviderCard({ provider, onSave, onDelete, isNew = false
         </div>
       </div>
       {isOpen && (
-        <form onSubmit={handleSubmit} className="provider-form">
+        <form onSubmit={handleSubmit} className="provider-form" data-block-toggle>
           <label>
             订阅链接
             <div className="link-input-row">
@@ -251,4 +258,13 @@ export default function ProviderCard({ provider, onSave, onDelete, isNew = false
       )}
     </section>
   );
+}
+function deriveLinkStatus(provider) {
+  if (provider.isValid === false) {
+    return { tagClass: "tag-danger", label: "链接失效", cardClass: "danger" };
+  }
+  if (provider.isValid === true) {
+    return { tagClass: "tag-valid", label: "链接正常", cardClass: "" };
+  }
+  return { tagClass: "tag-warning", label: "检测中", cardClass: "warning" };
 }

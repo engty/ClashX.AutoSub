@@ -106,8 +106,8 @@ button:disabled {
 }
 
 .provider-card.danger {
-  border-color: rgba(239, 68, 68, 0.6);
-  box-shadow: 0 0 18px rgba(239, 68, 68, 0.2);
+  border-color: rgba(251, 146, 60, 0.65);
+  box-shadow: 0 0 18px rgba(251, 146, 60, 0.18);
 }
 
 .card-header {
@@ -196,6 +196,18 @@ button:disabled {
   background: rgba(239, 68, 68, 0.25);
   color: #fecaca;
   border: 1px solid rgba(239, 68, 68, 0.45);
+}
+
+.tag-danger {
+  background: rgba(239, 68, 68, 0.25);
+  color: #fecaca;
+  border: 1px solid rgba(239, 68, 68, 0.55);
+}
+
+.tag-warning {
+  background: rgba(251, 191, 36, 0.25);
+  color: #fde68a;
+  border: 1px solid rgba(251, 191, 36, 0.5);
 }
 
 .tag-neutral {
