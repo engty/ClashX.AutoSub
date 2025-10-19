@@ -66,7 +66,6 @@ export default function App() {
     <div className="app-shell">
       <header className="app-header">
         <h1>ClashX AutoSub 订阅配置</h1>
-        <p>基于真实 YAML 用户配置进行展示与修改。</p>
         <div className="header-actions">
           <button type="button" onClick={loadProviders} disabled={loading}>
             {loading ? "加载中..." : "刷新数据"}

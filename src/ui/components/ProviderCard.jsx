@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 const HIGHLIGHT_LABEL = {
-  danger: "即将失效 (≤ 60 秒)",
+  danger: "已失效",
   warning: "即将过期 (≤ 5 分钟)",
 };
 
@@ -13,31 +13,17 @@ export default function ProviderCard({ provider, onUpdate }) {
   const [longTerm, setLongTerm] = useState(provider.expirySeconds == null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setDraftUrl(provider.url);
     setSecondsInput(provider.expirySeconds != null ? String(provider.expirySeconds) : "");
     setLongTerm(provider.expirySeconds == null);
     setMessage("");
+    setIsOpen(false);
   }, [provider.id, provider.url, provider.expirySeconds]);
 
   const highlightLabel = provider.highlight ? HIGHLIGHT_LABEL[provider.highlight] : "";
-
-  const expiryDescription = useMemo(() => {
-    if (longTerm) {
-      return "长期有效";
-    }
-    if (provider.expirySeconds == null) {
-      return provider.expiryDisplay || "遵循模板设置";
-    }
-    if (provider.expirySeconds < 60) {
-      return `${provider.expirySeconds} 秒 (建议立即刷新)`;
-    }
-    if (provider.expirySeconds < 3600) {
-      return `${Math.round(provider.expirySeconds / 60)} 分钟`;
-    }
-    return `${Math.round(provider.expirySeconds / 3600)} 小时`;
-  }, [longTerm, provider.expirySeconds, provider.expiryDisplay]);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -55,7 +41,6 @@ export default function ProviderCard({ provider, onUpdate }) {
         payload.expirySeconds = Math.floor(numeric);
       }
       await onUpdate(provider.id, payload);
-      setMessage("已保存修改");
     } catch (err) {
       setMessage(err.message || "保存失败");
     } finally {
@@ -64,70 +49,67 @@ export default function ProviderCard({ provider, onUpdate }) {
   }
 
   return (
-    <section className={`provider-card ${provider.highlight ?? ""}`}>
-      <header>
-        <h2>{provider.name}</h2>
-        <span className="tag">{provider.type || "http"}</span>
-      </header>
-      <dl className="provider-meta">
-        <div>
-          <dt>当前链接</dt>
-          <dd>{provider.url}</dd>
+    <section
+      className={`provider-card ${provider.highlight ?? ""} ${isOpen ? "open" : "closed"}`}
+    >
+      <button
+        type="button"
+        className="card-toggle"
+        onClick={() => setIsOpen((value) => !value)}
+        aria-expanded={isOpen}
+      >
+        <div className="card-heading">
+          <h2>{provider.name}</h2>
+          <span className="tag">{provider.type || "http"}</span>
         </div>
-        <div>
-          <dt>有效期策略</dt>
-          <dd>
-            {expiryDescription}
-            {highlightLabel && <span className="tag danger-tag">{highlightLabel}</span>}
-          </dd>
+        <div className="card-meta">
+          {highlightLabel && <span className="tag danger-tag">{highlightLabel}</span>}
+          <span className={`chevron ${isOpen ? "chevron-open" : ""}`} aria-hidden="true">
+            ▾
+          </span>
         </div>
-        {provider.interval != null && (
-          <div>
-            <dt>刷新间隔</dt>
-            <dd>{provider.interval} 秒</dd>
-          </div>
-        )}
-      </dl>
-      <form onSubmit={handleSubmit} className="provider-form">
-        <label>
-          新链接
-          <input
-            type="url"
-            required
-            value={draftUrl}
-            onChange={(event) => setDraftUrl(event.target.value)}
-            placeholder="https://example.com/subscribe"
-          />
-        </label>
-        <label className="expiry-row">
-          <span>设置有效期 (秒，可选)</span>
-          <div className="expiry-inputs">
+      </button>
+      {isOpen && (
+        <form onSubmit={handleSubmit} className="provider-form">
+          <label>
+            订阅链接
             <input
-              type="number"
-              min="1"
-              step="1"
-              value={longTerm ? "" : secondsInput}
-              disabled={longTerm}
-              onChange={(event) => setSecondsInput(event.target.value)}
-              placeholder="留空表示保持原策略"
+              type="url"
+              required
+              value={draftUrl}
+              onChange={(event) => setDraftUrl(event.target.value)}
+              placeholder="https://example.com/subscribe"
+              className="new-link-input"
             />
-            <label className="checkbox">
+          </label>
+          <label className="expiry-row">
+            <div className="expiry-inputs">
               <input
-                type="checkbox"
-                checked={longTerm}
-                onChange={(event) => setLongTerm(event.target.checked)}
+                type="number"
+                min="1"
+                step="1"
+                value={longTerm ? "" : secondsInput}
+                disabled={longTerm}
+                onChange={(event) => setSecondsInput(event.target.value)}
+                placeholder="有效期（单位秒，留空不修改）"
               />
-              设为长期有效
-            </label>
+              <label className="checkbox">
+                <input
+                  type="checkbox"
+                  checked={longTerm}
+                  onChange={(event) => setLongTerm(event.target.checked)}
+                />
+              </label>长期有效
+            </div>
+          </label>
+          <div className="form-actions">
+            <button type="submit" disabled={saving}>
+              {saving ? "保存中..." : "保存"}
+            </button>
+            <span className="form-message">{message}</span>
           </div>
-        </label>
-        <div className="form-actions">
-          <button type="submit" disabled={saving}>
-            {saving ? "保存中..." : "保存"}
-          </button>
-          <span className="form-message">{message}</span>
-        </div>
-      </form>
+        </form>
+      )}
     </section>
   );
 }

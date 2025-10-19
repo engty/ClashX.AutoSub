@@ -15,6 +15,12 @@ body {
   flex-direction: column;
 }
 
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .app-header {
   padding: 24px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -67,13 +73,17 @@ button:disabled {
 .info {
   margin: 24px;
   color: rgba(230, 237, 243, 0.7);
+  max-width: 500px;
 }
 
 .provider-grid {
-  padding: 24px;
-  display: grid;
+  width: 100%;
+  max-width: 500px;
+  padding: 24px 0 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 }
 
 .provider-card {
@@ -85,6 +95,9 @@ button:disabled {
   flex-direction: column;
   gap: 16px;
   backdrop-filter: blur(12px);
+  width: min(90%, 450px);
+  max-width: 450px;
+  box-sizing: border-box;
 }
 
 .provider-card.warning {
@@ -97,16 +110,35 @@ button:disabled {
   box-shadow: 0 0 18px rgba(239, 68, 68, 0.2);
 }
 
-.provider-card header {
+.card-toggle {
+  width: 100%;
+  border: none;
+  background: none;
+  color: inherit;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.card-heading {
+  display: flex;
+  align-items: center;
   gap: 12px;
 }
 
 .provider-card h2 {
   margin: 0;
   font-size: 20px;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .tag {
@@ -125,20 +157,13 @@ button:disabled {
   color: #fecaca;
 }
 
-.provider-meta {
-  display: grid;
-  gap: 12px;
+.chevron {
+  font-size: 18px;
+  transition: transform 0.2s ease;
 }
 
-.provider-meta dt {
-  font-weight: 600;
-  color: rgba(226, 232, 240, 0.85);
-}
-
-.provider-meta dd {
-  margin: 4px 0 0;
-  color: rgba(226, 232, 240, 0.7);
-  word-break: break-all;
+.chevron-open {
+  transform: rotate(180deg);
 }
 
 .provider-form {
@@ -164,8 +189,12 @@ input[type="number"] {
   color: #e6edf3;
 }
 
+.provider-form .new-link-input {
+  width: 90%;
+}
+
 .expiry-row {
-  gap: 8px;
+  gap: 18px;
 }
 
 .expiry-inputs {

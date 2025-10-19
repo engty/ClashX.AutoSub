@@ -18,8 +18,10 @@
       {
         "label": "main",
         "title": "ClashX AutoSub",
-        "width": 1280,
-        "height": 800,
+        "width": 500,
+        "height": 600,
+        "minWidth": 500,
+        "maxWidth": 500,
         "resizable": true
       }
     ],

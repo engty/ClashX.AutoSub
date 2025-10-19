@@ -1,6 +1,7 @@
+disable_response_storage = true
 model = "gpt-5-codex"
+model_provider = "packycode"
 model_reasoning_effort = "high"
-
 
 [mcp_servers.chrome-devtools]
 args = ["chrome-devtools-mcp@latest"]
