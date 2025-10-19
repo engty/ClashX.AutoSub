@@ -44,6 +44,44 @@ main {
   gap: 16px;
 }
 
+.refresh-button {
+  margin-left: auto;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(76, 110, 245, 0.28);
+  transition: background 0.2s ease;
+}
+
+.refresh-button:hover:enabled {
+  background: rgba(76, 110, 245, 0.38);
+}
+
+.refresh-button:disabled {
+  background: rgba(76, 110, 245, 0.18);
+}
+
+.refresh-button svg {
+  width: 22px;
+  height: 22px;
+}
+
+.refresh-button.is-loading svg {
+  animation: refresh-spin 0.9s linear infinite;
+}
+
+@keyframes refresh-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 button {
   padding: 8px 16px;
   border: none;

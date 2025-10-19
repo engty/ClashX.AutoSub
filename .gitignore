@@ -17,7 +17,7 @@ ClashX/goClash/goClash.a
 fastlane/report.xml
 ClashX/Resources/Country.mmdb.gz
 .bundle/config
-
+.codex
 # Node / Tauri workspace
 node_modules/
 dist/
