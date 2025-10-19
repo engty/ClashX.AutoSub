@@ -2,21 +2,27 @@ proxy-providers:
   牛牛机场:
     url: https://zhuzhuzhu.whtjdasha.com/api/v1/client/subscribe?token=3a314dfa45a3d9b8b7875c89f881388a
     type: http
-    interval: 86400
+    interval: 2592000
     health-check:
       enable: true
       url: https://www.gstatic.com/generate_204
       interval: 180
-    link-expiry: never
   火烧云:
     url: http://subvonehsy.onesubv.site/mj/v8/front/mysubnew?token=3ef4889fb36f2a92e5bd60a76d8753e3&timestamp=1760785360&sign=6794f6d4f361302d083300614bd65140
     type: http
-    interval: 86400
+    interval: 300
     health-check:
       enable: true
       url: https://www.gstatic.com/generate_204
       interval: 180
-    link-expiry: never
+  红心:
+    url: https://114.132.219.239:9888/tgyunsub?token=59c15a5f234e1f4f1cbce73e37da6771
+    type: http
+    interval: 300
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 180
 proxies:
   - name: 直连
     type: direct

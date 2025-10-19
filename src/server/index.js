@@ -8,6 +8,9 @@ const PORT = Number(process.env.PORT || 3001);
 
 const USER_CONFIG_PATH = path.resolve("yaml/user-config.yaml");
 const TEMPLATE_PATH = path.resolve("yaml/template.yaml");
+const SECONDS_PER_MINUTE = 60;
+const LONG_TERM_THRESHOLD_SECONDS = 60 * 60 * 24 * 30; // 30 天
+const LONG_TERM_MINUTES = LONG_TERM_THRESHOLD_SECONDS / SECONDS_PER_MINUTE;
 
 app.use(express.json());
 
@@ -33,7 +36,7 @@ app.get("/api/providers", async (_req, res) => {
 
 app.post("/api/providers/:providerId/link", async (req, res) => {
   const { providerId } = req.params;
-  const { newUrl, expirySeconds, expiryPolicy } = req.body || {};
+  const { newUrl, expiryMinutes, allowCreate } = req.body || {};
 
   if (!newUrl || typeof newUrl !== "string") {
     return res.status(400).json({ error: "新链接不能为空" });
@@ -41,38 +44,99 @@ app.post("/api/providers/:providerId/link", async (req, res) => {
 
   try {
     const snapshot = await loadConfiguration();
+    if (!snapshot.document["proxy-providers"] || typeof snapshot.document["proxy-providers"] !== "object") {
+      snapshot.document["proxy-providers"] = {};
+    }
+    const providers = snapshot.document["proxy-providers"];
+
+    const templateBlueprint = await getProviderTemplateBlueprint();
+    let providerEntry = providers[providerId];
+    if (!providerEntry) {
+      if (!allowCreate) {
+        return res.status(404).json({ error: "订阅源不存在" });
+      }
+      providerEntry = await buildProviderEntry(newUrl, expiryMinutes);
+      providers[providerId] = providerEntry;
+    } else {
+      providerEntry.url = newUrl.trim();
+      delete providerEntry["link-expiry"];
+      delete providerEntry["link-expiry-seconds"];
+
+      const intervalConfig = computeIntervalFromMinutes(expiryMinutes, templateBlueprint.interval);
+      if (intervalConfig.apply) {
+        if (intervalConfig.value === undefined) {
+          delete providerEntry.interval;
+        } else {
+          providerEntry.interval = intervalConfig.value;
+        }
+      }
+    }
+
+    await writeUserConfiguration(snapshot.document);
+
+    const refreshedBase = toProviderPayload(providerId, providerEntry);
+    const [refreshed] = await enrichProvidersWithHealth([refreshedBase]);
+    res.json({ provider: refreshed });
+  } catch (err) {
+    console.error(err);
+    if (err?.statusCode === 400) {
+      return res.status(400).json({ error: err.message });
+    }
+    res.status(500).json({ error: err.message || "保存失败" });
+  }
+});
+
+app.post("/api/providers", async (req, res) => {
+  const { name, url, expiryMinutes } = req.body || {};
+  if (!name || typeof name !== "string" || !name.trim()) {
+    return res.status(400).json({ error: "订阅名称不能为空" });
+  }
+  if (!url || typeof url !== "string" || !url.trim()) {
+    return res.status(400).json({ error: "订阅链接不能为空" });
+  }
+
+  try {
+    const snapshot = await loadConfiguration();
+    if (!snapshot.document["proxy-providers"] || typeof snapshot.document["proxy-providers"] !== "object") {
+      snapshot.document["proxy-providers"] = {};
+    }
+    const providers = snapshot.document["proxy-providers"];
+    const trimmedName = name.trim();
+    if (providers[trimmedName]) {
+      return res.status(409).json({ error: "订阅名称已存在" });
+    }
+
+    const entry = await buildProviderEntry(url, expiryMinutes);
+
+    providers[trimmedName] = entry;
+    await writeUserConfiguration(snapshot.document);
+
+    const [provider] = await enrichProvidersWithHealth([toProviderPayload(trimmedName, entry)]);
+    res.status(201).json({ provider });
+  } catch (err) {
+    console.error(err);
+    if (err?.statusCode === 400) {
+      return res.status(400).json({ error: err.message });
+    }
+    res.status(500).json({ error: err.message || "新增失败" });
+  }
+});
+
+app.delete("/api/providers/:providerId", async (req, res) => {
+  const { providerId } = req.params;
+  try {
+    const snapshot = await loadConfiguration();
     const providers = snapshot.document["proxy-providers"];
     if (!providers || !providers[providerId]) {
       return res.status(404).json({ error: "订阅源不存在" });
     }
 
-    providers[providerId].url = newUrl.trim();
-
-    if (expiryPolicy === "never") {
-      delete providers[providerId]["link-expiry-seconds"];
-      providers[providerId]["link-expiry"] = "never";
-    } else if (expirySeconds !== undefined) {
-      if (expirySeconds === null || expirySeconds === "") {
-        delete providers[providerId]["link-expiry-seconds"];
-      } else {
-        const numeric = Number(expirySeconds);
-        if (!Number.isFinite(numeric) || numeric <= 0) {
-          return res.status(400).json({ error: "有效期必须为正整数分钟" });
-        }
-        providers[providerId]["link-expiry-seconds"] = Math.floor(numeric * 60);
-        delete providers[providerId]["link-expiry"];
-      }
-    }
-
-    await ensureUserConfigDirectory();
-    await fs.writeFile(USER_CONFIG_PATH, YAML.stringify(snapshot.document), "utf8");
-
-    const refreshedBase = toProviderPayload(providerId, providers[providerId]);
-    const [refreshed] = await enrichProvidersWithHealth([refreshedBase]);
-    res.json({ provider: refreshed });
+    delete providers[providerId];
+    await writeUserConfiguration(snapshot.document);
+    res.status(204).send();
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message || "保存失败" });
+    res.status(500).json({ error: err.message || "删除失败" });
   }
 });
 
@@ -114,6 +178,69 @@ async function ensureUserConfigDirectory() {
   await fs.mkdir(directory, { recursive: true });
 }
 
+async function writeUserConfiguration(document) {
+  await ensureUserConfigDirectory();
+  await fs.writeFile(USER_CONFIG_PATH, YAML.stringify(document), "utf8");
+}
+
+let providerTemplateCache = null;
+
+async function getProviderTemplateBlueprint() {
+  if (providerTemplateCache) {
+    return providerTemplateCache;
+  }
+  const templateConfig = await loadYaml(TEMPLATE_PATH);
+  const providers = templateConfig?.["proxy-providers"];
+  if (!providers || Object.keys(providers).length === 0) {
+    throw new Error("模板缺少 proxy-providers 参考项");
+  }
+  const firstKey = Object.keys(providers)[0];
+  providerTemplateCache = deepClone(providers[firstKey]);
+  return providerTemplateCache;
+}
+
+async function buildProviderEntry(url, expiryMinutes) {
+  const blueprint = await getProviderTemplateBlueprint();
+  const entry = deepClone(blueprint);
+  entry.url = url.trim();
+  const intervalConfig = computeIntervalFromMinutes(
+    expiryMinutes ?? null,
+    blueprint.interval
+  );
+  if (intervalConfig.apply) {
+    if (intervalConfig.value === undefined) {
+      delete entry.interval;
+    } else {
+      entry.interval = intervalConfig.value;
+    }
+  }
+  return entry;
+}
+
+function computeIntervalFromMinutes(minutes, templateInterval) {
+  if (minutes === undefined) {
+    return { apply: false, value: undefined };
+  }
+  if (minutes === null || minutes === "") {
+    return { apply: true, value: LONG_TERM_THRESHOLD_SECONDS };
+  }
+  const numeric = Number(minutes);
+  if (!Number.isFinite(numeric) || numeric <= 0) {
+    throw createValidationError("有效期必须为正整数分钟或留空");
+  }
+  return { apply: true, value: Math.floor(numeric * 60) };
+}
+
+function createValidationError(message) {
+  const error = new Error(message);
+  error.statusCode = 400;
+  return error;
+}
+
+function deepClone(value) {
+  return value == null ? value : JSON.parse(JSON.stringify(value));
+}
+
 function toProviderPayload(name, info) {
   const resolvedExpiry = resolveExpiry(info);
   return {
@@ -124,32 +251,56 @@ function toProviderPayload(name, info) {
     interval: info.interval ?? null,
     expirySeconds: resolvedExpiry.seconds,
     expiryMinutes: resolvedExpiry.minutes,
+    isLongTerm: resolvedExpiry.isLongTerm,
     expiryDisplay: resolvedExpiry.display,
     highlight: resolvedExpiry.highlight,
   };
 }
 
 function resolveExpiry(provider) {
-  const policy = provider?.["link-expiry"];
-  const explicitSeconds = provider?.["link-expiry-seconds"];
-  const interval = provider?.interval;
-
-  const parsedPolicy = interpretExpiry(policy);
-  if (parsedPolicy !== undefined) {
-    return parsedPolicy;
+  let seconds = null;
+  if (typeof provider?.interval === "number" && Number.isFinite(provider.interval)) {
+    seconds = provider.interval;
+  } else {
+    const policy = provider?.["link-expiry"];
+    const explicitSeconds = provider?.["link-expiry-seconds"];
+    const parsedPolicy = interpretExpiry(policy);
+    if (parsedPolicy !== undefined && parsedPolicy.seconds != null) {
+      seconds = parsedPolicy.seconds;
+    } else {
+      const parsedExplicit = interpretExpiry(explicitSeconds);
+      if (parsedExplicit !== undefined && parsedExplicit.seconds != null) {
+        seconds = parsedExplicit.seconds;
+      }
+    }
   }
 
-  const parsedExplicit = interpretExpiry(explicitSeconds);
-  if (parsedExplicit !== undefined) {
-    return parsedExplicit;
+  if (seconds != null && (!Number.isFinite(seconds) || seconds <= 0)) {
+    seconds = null;
   }
 
-  const parsedInterval = interpretExpiry(interval);
-  if (parsedInterval !== undefined) {
-    return parsedInterval;
-  }
+  const isLongTerm = seconds != null && seconds >= LONG_TERM_THRESHOLD_SECONDS;
+  const minutes =
+    seconds == null
+      ? null
+      : isLongTerm
+      ? LONG_TERM_MINUTES
+      : Math.max(1, Math.round(seconds / SECONDS_PER_MINUTE));
 
-  return { seconds: null, minutes: null, display: "遵循默认策略", highlight: null };
+  const display =
+    seconds == null
+      ? "遵循默认策略"
+      : isLongTerm
+      ? "长期有效 (≥30 天)"
+      : `${minutes} 分钟`;
+
+  return {
+    seconds,
+    minutes,
+    display,
+    isLongTerm,
+    highlight: computeHighlightMinutes(minutes, isLongTerm),
+  };
 }
 
 function interpretExpiry(value) {
@@ -184,21 +335,27 @@ function normaliseSeconds(value) {
     return { seconds: null, minutes: null, display: "长期有效", highlight: null };
   }
   const seconds = Math.floor(value);
-  const minutes = Math.max(1, Math.round(seconds / 60));
+  const isLongTerm = seconds >= LONG_TERM_THRESHOLD_SECONDS;
+  const minutes = isLongTerm
+    ? LONG_TERM_MINUTES
+    : Math.max(1, Math.round(seconds / SECONDS_PER_MINUTE));
   const display =
-    minutes >= 60
+    isLongTerm && minutes === LONG_TERM_MINUTES
+      ? "长期有效 (≥30 天)"
+      : minutes >= 60
       ? `${Math.round(minutes / 60)} 小时`
       : `${minutes} 分钟`;
   return {
     seconds,
     minutes,
     display,
-    highlight: computeHighlightMinutes(minutes),
+    isLongTerm,
+    highlight: computeHighlightMinutes(minutes, isLongTerm),
   };
 }
 
-function computeHighlightMinutes(minutes) {
-  if (minutes == null) {
+function computeHighlightMinutes(minutes, isLongTerm = false) {
+  if (minutes == null || isLongTerm) {
     return null;
   }
   if (minutes <= 1) {

@@ -110,29 +110,64 @@ button:disabled {
   box-shadow: 0 0 18px rgba(239, 68, 68, 0.2);
 }
 
-.card-toggle {
-  width: 100%;
-  border: none;
-  background: none;
-  color: inherit;
-  padding: 0;
+.card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  cursor: pointer;
-  text-align: left;
 }
 
 .card-heading {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.card-toggle {
+  border: none;
+  background: none;
+  color: inherit;
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.card-toggle:hover {
+  background: rgba(148, 163, 184, 0.18);
+}
+
+.card-toggle:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.7);
+  outline-offset: 2px;
 }
 
 .provider-card h2 {
   margin: 0;
   font-size: 20px;
+}
+
+.name-input {
+  flex: 1;
+  min-width: 0;
+  font-size: 20px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.6);
+  color: inherit;
+}
+
+.name-input:focus {
+  outline: none;
+  border-color: rgba(99, 102, 241, 0.6);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.35);
 }
 
 .card-meta {
@@ -288,7 +323,56 @@ input[type="number"] {
   gap: 12px;
 }
 
+.form-actions button {
+  min-width: 88px;
+}
+
+.danger-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(239, 68, 68, 0.18);
+  color: #fecaca;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.danger-button:hover {
+  background: rgba(239, 68, 68, 0.28);
+  color: #fee2e2;
+}
+
+.danger-button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
 .form-message {
   font-size: 12px;
   color: rgba(148, 187, 233, 0.9);
+}
+
+.add-provider-button {
+  width: min(80%, 480px);
+  max-width: 480px;
+  padding: 18px;
+  margin-top: 8px;
+  border-radius: 12px;
+  border: 1px dashed rgba(148, 163, 184, 0.4);
+  background: rgba(15, 23, 42, 0.4);
+  color: rgba(148, 197, 255, 0.85);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.add-provider-button:hover {
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(59, 130, 246, 0.6);
+  color: #bfdbfe;
+}
+
+.add-provider-button:active {
+  transform: translateY(1px);
 }
